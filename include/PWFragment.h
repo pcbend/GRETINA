@@ -33,7 +33,7 @@ class PWFragment : public TObject {
       
     const inline Int_t   &GetNumberOfHits()           { return fNumberHits;  }
 
-    const inline PWSegment &GetSegment(unsigned int &i) 
+    inline PWSegment &GetSegment(unsigned int &i) 
                                       { if(i>=fSegments.size()) i=fSegments.size()-1; return fSegments.at(i); } 
 
     const inline PWSegment &Get(unsigned int &i) { return GetSegment(i); }  

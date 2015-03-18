@@ -24,20 +24,21 @@ class PWSegment : public TObject {
     void Clear(Option_t *opt ="");
     void Print(Option_t *opt ="");
 
-    const inline Double_t X() { return fPosition.X(); }
-    const inline Double_t Y() { return fPosition.Y(); }
-    const inline Double_t Z() { return fPosition.Z(); }
+    inline Double_t X() { return fPosition.X(); }
+    inline Double_t Y() { return fPosition.Y(); }
+    inline Double_t Z() { return fPosition.Z(); }
 
-    const inline Double_t Mag()   { return fPosition.Mag();   }
-    const inline Double_t Theta() { return fPosition.Theta(); }
-    const inline Double_t Phi()   { return fPosition.Phi();   }
+    inline Double_t Mag()   { return fPosition.Mag();   }
+    inline Double_t Theta() { return fPosition.Theta(); }
+    inline Double_t Phi()   { return fPosition.Phi();   }
 
-    const inline Short_t  Pixel()  { return fPixel;   }
-    const inline Short_t  A()      { return fACharge; }
-    const inline Short_t  B()      { return fBCharge; }
-    const inline Short_t  C()      { return fCCharge; }
-    const inline Short_t  Time()   { return fTime;    }
+    inline Short_t  Pixel()  { return fPixel;   }
+    inline Short_t  A()      { return fACharge; }
+    inline Short_t  B()      { return fBCharge; }
+    inline Short_t  C()      { return fCCharge; }
+    inline Short_t  Time()   { return fTime;    }
 
+    inline TVector3 Position() { return fPosition; }
 
     static TVector3 GetPosition(int PixelId);
 

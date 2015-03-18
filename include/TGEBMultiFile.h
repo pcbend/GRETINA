@@ -48,9 +48,9 @@ class TGEBMultiFile : public TObject {
     int         fLastErrno;
     std::string fLastError;
 
-    size_t fFileSize;
-    size_t fBytesRead;
-    size_t fBytesWritten;
+    //size_t fFileSize;
+    //size_t fBytesRead;
+    //size_t fBytesWritten;
 
     Int_t  fExperimentNumber;
     Int_t  fRunNumber;
@@ -58,7 +58,12 @@ class TGEBMultiFile : public TObject {
     std::vector<TGEBEvent*> fEvents;
     std::vector<TGEBFile*>  fFiles;
     std::vector<int>        fEventCounter;
+    std::vector<Long_t>     fLastTimeStamp;
 
+    std::vector<size_t>     fBytes;
+    std::vector<size_t>     fBytesRead;
+
+    
 
     inline TGEBEvent *GetEvent(const int &i) { return fEvents.at(i); } 
     inline TGEBFile  *GetFile(const int &i)  { return fFiles.at(i);  } 

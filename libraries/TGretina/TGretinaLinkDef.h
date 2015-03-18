@@ -7,7 +7,8 @@
 #pragma link C++ nestedclasses;
 
 
-#pragma link C++ class std::vector<G2Fragment>+;
+#pragma link C++ class TSegHit+;
+#pragma link C++ class std::vector<TSegHit>+;
 #pragma link C++ class TGretina+;
 
 

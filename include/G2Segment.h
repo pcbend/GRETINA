@@ -36,6 +36,8 @@ class G2Segment : public TObject {
     const inline Float_t Energy()        { return fEnergy; }
     const inline Float_t SegmentEnergy() { return fSegmentEnergy; }
 
+    const inline TVector3 Position()     { return fPosition; }
+
 
   private:
     TVector3 fPosition;

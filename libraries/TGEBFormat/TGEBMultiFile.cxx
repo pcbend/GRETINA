@@ -6,6 +6,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include <Globals.h>
+
 ClassImp(TGEBMultiFile)
 
 
@@ -23,18 +25,36 @@ bool TGEBMultiFile::Add(TGEBFile *file) {
   fFiles.push_back(file);
   TGEBEvent *event = new TGEBEvent;
   fEvents.push_back(event);
-  int counter = 0;
-  fEventCounter.push_back(counter);
+  int zero = 0;
+  size_t zero_t = 0;
+  fEventCounter.push_back(zero);
+  fLastTimeStamp.push_back(zero_t);
+
+  fBytes.push_back(file->GetFileSize());
+  fBytesRead.push_back(zero_t);
+
   GetNextEvent((int)fFiles.size()-1);
   return true;
 }
 
 bool TGEBMultiFile::GetNextEvent(int i) {
-  int bytes = fFiles.at(i)->Read(fEvents.at(i));
-  printf("bytes = %i\n",bytes);
+  fLastTimeStamp.at(i) = fEvents.at(i)->GetTimeStamp();
+  size_t bytes = fFiles.at(i)->Read(fEvents.at(i));
+  if(bytes!=-1)
+    fBytesRead.at(i) += bytes;
+
+  //printf("bytes = %i\n",bytes);
   if(bytes<1) {
+    delete fFiles.at(i); 
     fFiles.erase(fFiles.begin()+i);
+    delete fEvents.at(i);
     fEvents.erase(fEvents.begin()+i);
+
+    fEventCounter.erase(fEventCounter.begin()+i);
+    fLastTimeStamp.erase(fLastTimeStamp.begin()+i);
+    fBytes.erase(fBytes.begin()+i);
+    fBytesRead.erase(fBytesRead.begin()+i);
+
   }
   return true;
 }
@@ -49,11 +69,11 @@ TGEBEvent *TGEBMultiFile::Read()  {
   int pos = FindMinimum();
 
 
-  printf("pos = %i\n",pos);
-  std::cout << "pos = " <<  std::min_element(std::begin(fEvents),std::end(fEvents)) - std::begin(fEvents) << std::endl; 
+  //printf("pos = %i\n",pos);
+  //std::cout << "pos = " <<  std::min_element(std::begin(fEvents),std::end(fEvents)) - std::begin(fEvents) << std::endl; 
   TGEBEvent *gevent = fEvents.at(pos); 
   fEventCounter.at(pos)++;
-  printf("eventtype %i        |   timestamp  %lu  \n",gevent->GetEventType(),gevent->GetTimeStamp());
+  //printf("eventtype %i        |   timestamp  %lu  \n",gevent->GetEventType(),gevent->GetTimeStamp());
   GetNextEvent(pos);
   return gevent;
 } 
@@ -63,7 +83,16 @@ TGEBEvent *TGEBMultiFile::Read()  {
 
 void TGEBMultiFile::Clear(Option_t *opt) {  }
 
-void TGEBMultiFile::Print(Option_t *opt) {  }
+void TGEBMultiFile::Print(Option_t *opt) { 
+ 
+  for(int x=0;x<fEvents.size();x++) {
+    printf("[%.02f/%.02f ] [%08i]   file: %s\t" DYELLOW "Last TimeStamp read: %lu \t" DRED "Current TimeStamp: %lu\t" MAGENTA  "%lu" RESET_COLOR "\n",
+            (float)fBytesRead.at(x)/1000000.0,(float)fBytes.at(x)/1000000.0,
+            fEventCounter.at(x),fFiles.at(x)->GetFileName(),fLastTimeStamp.at(x),fEvents.at(x)->GetTimeStamp(),fEvents.at(x)->GetTimeStamp()-fLastTimeStamp.at(x) );
+    
+  }
+  printf(DMAGENTA "==========================" RESET_COLOR "\n");
+}
 
 
 int TGEBMultiFile::FindMinimum() {

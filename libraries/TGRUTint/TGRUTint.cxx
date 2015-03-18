@@ -57,7 +57,7 @@ TGRUTint::TGRUTint(int argc, char **argv,void *options, Int_t numOptions, Bool_t
       GetOptions(&argc,argv);
       PrintLogo(fPrintLogo);
     //  SetPrompt( DYELLOW "GRSI [%d] " RESET_COLOR);
-      SetPrompt("GRSI [%d] ");
+      SetPrompt("GRETINA [%d] ");
       PrintHelp(fPrintHelp);
       ApplyOptions();
 }
