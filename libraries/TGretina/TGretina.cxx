@@ -42,7 +42,7 @@ void TGretina::AddGretinaHit(G2Fragment &frag) {
 
   SetID(frag.GetCrystalNumber());            
   SetEnergy(frag.GetTotalEnergy());        
-    printf("cfd = %f\n",frag.GetCfd());
+  //  printf("cfd = %f\n",frag.GetCfd());
   unsigned int temp = 3;
   SetCharge(frag.GetCoreCharge(temp));        
   SetTimeStamp(frag.GetTimeStamp());     
@@ -70,6 +70,14 @@ void TGretina::Clear(Option_t *opt) {
   fSegments.clear();
   
 }
+
+
+
+TVector3 TGretina::FindPosition(int cryId,Float_t localX,Float_t localY,Float_t localZ) { }
+
+
+
+
 
 
 

@@ -3,8 +3,8 @@
 
 #include "TGEBBanks.h"
 
-inline std::ostream& operator<<(std::ostream& os, const TGEBGeSegType1 &fSeg) {
-   //std::streamsize ss = std::cout.precision();
+std::ostream& operator<<(std::ostream& os, const TGEBEvent::TGEBGeSegType1 &fSeg) {
+   std::streamsize ss = std::cout.precision();
    return os << "HPGeSegment[" << std::setw(3) << fSeg.seg << "]\t(" 
              << std::setprecision(2)  << fSeg.x << ", " << fSeg.y << ", " << fSeg.z << ")\t"
              << fSeg.seg_ener << " / " << fSeg.e << std::setprecision(ss) << std::endl; 
@@ -12,7 +12,7 @@ inline std::ostream& operator<<(std::ostream& os, const TGEBGeSegType1 &fSeg) {
 
 
 
-inline std::ostream& operator<<(std::ostream& os, const TGEBBankType1 &bank) {
+std::ostream& operator<<(std::ostream& os, const TGEBEvent::TGEBBankType1 &bank) {
    std::streamsize ss = std::cout.precision();
    //os << "************************" << std::endl;
    os << "type        = "<< std::setw(8) << std::hex << bank.type << std::dec << std::endl;
@@ -45,7 +45,7 @@ inline std::ostream& operator<<(std::ostream& os, const TGEBBankType1 &bank) {
 
 
 
-inline std::ostream& operator<<(std::ostream& os,const TPWHit &hit) {
+std::ostream& operator<<(std::ostream& os,const TGEBEvent::TPWHit &hit) {
    return os << "PWHit[" << std::setw(3) << hit.pix_id <<"]\t"   //  PW Bank @ " << std::hex << &head << std::dec      << std::endl
 	     << std::setw(8) << hit.data_a 
              << std::setw(8) << hit.data_b	
@@ -54,8 +54,9 @@ inline std::ostream& operator<<(std::ostream& os,const TPWHit &hit) {
 };
 
 
-inline std::ostream& operator<<(std::ostream& os,const TPWBank &bank) {
+std::ostream& operator<<(std::ostream& os,const TGEBEvent::TPWBank &bank) {
    os << std::setw(24) << "data_a" << std::setw(8) << "data_b" << std::setw(8) << "data_c" << std::setw(8) << "time" << std::endl;
+   //os << " size in bytes = " << sizeof(this) << endl;
    for(int x=0;x<bank.nhits;x++)
       os << bank.hit[x];
    os << "*****************************" << std::endl;

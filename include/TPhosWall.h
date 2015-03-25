@@ -1,6 +1,7 @@
 #ifndef TGRETINA_H 
 
 #include <TObject.h>
+#include <TVector3.h>
 
 #include <PWFragment.h>
 #include <PWSegment.h>
@@ -19,11 +20,13 @@ class TPhosWall : public TObject {
     const inline Short_t    GetC()        { if(fLargestHit>=fTime.size()) return 0; return fCCharge.at(fLargestHit); }
     const inline Short_t    GetTime()     { if(fLargestHit>=fTime.size()) return 0; return fTime.at(fLargestHit);    }
     const inline Short_t    GetLargestNumber() { return fLargestHit; }  
-    
+
     //inline const int NumberOfPWHits() { return PhosWallHits.size(); }
 
     void Print(Option_t *opt = "");
     void Clear(Option_t *opt = "");
+
+    static TVector3 *FindWallPosition(const int &pixel) { return fWallPositions[pixel]; }
 
   private:
     //std::vector<PWFragment> PhosWallHits;
@@ -39,6 +42,10 @@ class TPhosWall : public TObject {
     std::vector<Short_t>  fPixel;
     std::vector<Short_t>  fTime;
 
+
+    static TVector3 *fWallPositions[256];
+    static bool      fPositionsSet;
+    static void      SetWallPositions();
 
 
   ClassDef(TPhosWall,1);

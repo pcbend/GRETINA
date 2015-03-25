@@ -7,7 +7,7 @@
 #include <assert.h>
 
 #include "TGEBEvent.h"
-//#include "TGEBBanksFunctions.h"
+#include "TGEBBanksFunctions.h"
 
 ClassImp(TGEBEvent) 
 

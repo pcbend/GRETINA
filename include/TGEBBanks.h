@@ -25,6 +25,7 @@ typedef struct { // HPGe Segment Hit Type 1;
 }__attribute__((__packed__)) TGEBGeSegType1;
 
 
+friend std::ostream& operator<<(std::ostream& os, const TGEBEvent::TGEBGeSegType1 &fSeg);
 
 
 typedef struct { // Decomposed GRETINA Data
@@ -47,6 +48,7 @@ typedef struct { // Decomposed GRETINA Data
 }__attribute__((__packed__)) TGEBBankType1;
 
 
+friend std::ostream& operator<<(std::ostream& os, const TGEBEvent::TGEBBankType1 &bank);
 
 
 typedef struct {
@@ -57,6 +59,9 @@ typedef struct {
    Short_t time;    //int16_t
 }__attribute__((__packed__)) TPWHit;
 
+
+friend std::ostream& operator<<(std::ostream& os,const TGEBEvent::TPWHit &hit);
+
 typedef struct{
    TPWHit hit[MAX_PWID];
    Short_t nhits;       //int16_t   -> not actually part of the bank recorded to file.
@@ -64,6 +69,7 @@ typedef struct{
 
 
 
+friend std::ostream& operator<<(std::ostream& os,const TGEBEvent::TPWBank &bank);
 
 
 

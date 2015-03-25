@@ -69,6 +69,10 @@ class TGretina : public TObject {
     Int_t Size()                 { return fCrystalId.size(); }
     Int_t SegSize(const int &i)  { return fSegments.at(i).Size(); }
 
+
+    static TVector3 FindPosition(int cryId,
+                                 Float_t localX=0,Float_t localY=0,Float_t localZ=0);
+
   private:
     //std::vector<G2Fragment> GretinaHits;
 
@@ -90,6 +94,14 @@ class TGretina : public TObject {
  
     //std::vector<std::vector G2Segment> segments 
     std::vector<TSegHit> fSegments;
+
+   /* 
+    struct crmat{
+       Float_t Row[4];
+       Float_t Column[4];
+    } //!
+    static crmat crmat_table[31][4];
+*/
 
   ClassDef(TGretina,1);
 };

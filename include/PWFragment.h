@@ -5,6 +5,8 @@
 #include<vector>
 
 #include <TObject.h>
+#include <TCanvas.h>
+#include <TH2F.h>
 #include <TGEBEvent.h>
 
 #include <PWSegment.h>
@@ -29,7 +31,9 @@ class PWFragment : public TObject {
 
     void Clear(Option_t *opt ="");
     void Print(Option_t *opt ="");
-
+    void Draw(Option_t *opt="");
+    TH2F MakeHitPattern(Option_t *opt="");
+    void DrawSimpleHitPattern(Option_t *opt="");
       
     const inline Int_t   &GetNumberOfHits()           { return fNumberHits;  }
 
