@@ -6,8 +6,8 @@ LIBRARIES = libTGRUTint.so
 all:grutinizer
 
 LDROOT =  $(shell root-config --glibs)  #`root-config --glibs`
-LDROOT += -lXMLParser
-LDROOT += -lXMLIO
+#LDROOT += -lXMLParser
+#LDROOT += -lXMLIO
 LDROOT += -lProof
 LDROOT += -lGuiHtml
 LDROOT += -lSpectrum
