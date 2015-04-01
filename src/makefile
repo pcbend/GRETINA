@@ -8,7 +8,7 @@ all:grutinizer
 LDROOT =  $(shell root-config --glibs)  #`root-config --glibs`
 #LDROOT += -lXMLParser
 #LDROOT += -lXMLIO
-LDROOT += -lProof
+#LDROOT += -lProof
 LDROOT += -lGuiHtml
 LDROOT += -lSpectrum
 
