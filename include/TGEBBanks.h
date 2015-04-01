@@ -19,9 +19,9 @@ typedef struct { // HPGe Segment Hit Type 1;
    Float_t     x;   
    Float_t     y;   
    Float_t     z;   
-   Float_t     e;   
+   Float_t     e;        //fraction of the energy 
    Int_t       seg;
-   Float_t     seg_ener;
+   Float_t     seg_ener; //energy (cahrge) collected in the segment
 }__attribute__((__packed__)) TGEBGeSegType1;
 
 

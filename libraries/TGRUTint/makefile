@@ -1,5 +1,5 @@
 
-OBJECTS = TGRUTOptions.o TGRUTOptionsDict.o TGRUTint.o TGRUTintDict.o grsixx.o
+OBJECTS = TGRUTOptions.o TGRUTOptionsDict.o TGRUTint.o TGRUTintDict.o #grsixx.o
 
 CFLAGS += -fPIC
 

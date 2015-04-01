@@ -1,4 +1,4 @@
-SUBDIRS = TGRUTint TGEBFormat G2Format PWFormat TGretina TPhosWall GROOT 
+SUBDIRS = TGRUTint TGEBFormat G2Format PWFormat TGretina TPhosWall TKinematics TNucleus GROOT 
 ALLDIRS = $(SUBDIRS)
 
 .PHONY: subdirs $(ALLDIRS) clean

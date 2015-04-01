@@ -124,7 +124,7 @@ void PWFragment::Draw(Option_t *opt) {
 
 TH2F PWFragment::MakeHitPattern(Option_t *opt) {
   TH2F hitpattern("hitpattern","PWFragmet XY Hit Pattern",
-                   116,-58,58,116,-58,58);
+                   87,-58,58,87,-58,58);
 
   for(int i=0;i<256;i++) {
     hitpattern.Fill(TPhosWall::FindWallPosition(i)->X(),
@@ -137,6 +137,7 @@ TH2F PWFragment::MakeHitPattern(Option_t *opt) {
                      fSegments.at(i).Position().Y(),
                      fSegments.at(i).A());
   }
+  hitpattern.SetMaximum(10);
   return hitpattern;
 }
 

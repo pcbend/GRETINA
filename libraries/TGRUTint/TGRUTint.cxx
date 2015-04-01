@@ -23,8 +23,8 @@
 
 ClassImp(TGRUTint)
 
-extern void PopupLogo(bool);
-extern void WaitLogo();
+//extern void PopupLogo(bool);
+//extern void WaitLogo();
 
 TGRUTint *TGRUTint::fTGRUTint = NULL;
 
@@ -157,9 +157,9 @@ void TGRUTint::PrintLogo(bool print) {
      const unsigned int width = reflength + (reflength % 2);
      printf("\t*%s*\n", std::string(width,'*').c_str());   
      printf("\t*%*s%*s*\n",width/2+4,"GRUT Sort", width/2-4, "");
-     printf("\t*%*s%*s*\n",width/2+12,"a remake of a remake ", width/2-12, "");
-     printf("\t*%*s%*s*\n",width/2+reflength/2, ref.c_str(), width/2-reflength/2, "");
-     printf("\t*%*s%*s*\n",width/2+14,"A lean, mean sorting machine", width/2-14, "");
+     printf("\t*%*s%*s*\n",width/2+12,"a GRETINA sorting routine ", width/2-12, "");
+     //printf("\t*%*s%*s*\n",width/2+reflength/2, ref.c_str(), width/2-reflength/2, "");
+     //printf("\t*%*s%*s*\n",width/2+14,"A lean, mean sorting machine", width/2-14, "");
      printf("\t*%*s%*s*\n",width/2+9,"version " GRUT_RELEASE, width/2-9, "");
      printf("\t*%s*\n", std::string(width,'*').c_str());   
 
@@ -169,8 +169,8 @@ void TGRUTint::PrintLogo(bool print) {
 }
 
 void TGRUTint::DrawLogo() {
-   PopupLogo(false);
-   WaitLogo();
+   //PopupLogo(false);
+   //WaitLogo();
 }
 
 void TGRUTint::GetOptions(int *argc, char **argv) {

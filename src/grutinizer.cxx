@@ -13,6 +13,8 @@
 
 #include "bits/predefs.h"
 
+/*
+
 #ifdef __APPLE__
 #define HAVE_UTMPX_H
 #define UTMP_NO_ADDR
@@ -36,14 +38,15 @@
 # define STRUCT_UTMP struct utmp
 # endif
 
+*/
 
-static STRUCT_UTMP *gUtmpContents;
+//static STRUCT_UTMP *gUtmpContents;
 
 void SetGRUTEnv();
 void SetGRUTPluginHandlers();
-static int ReadUtmp();
-static STRUCT_UTMP *SearchEntry(int, const char*);
-static void SetDisplay();
+//static int ReadUtmp();
+//static STRUCT_UTMP *SearchEntry(int, const char*);
+//static void SetDisplay();
 
 
 
@@ -52,7 +55,7 @@ static void SetDisplay();
 
 int main(int argc, char **argv) {
    //Find the grsisort environment variable so that we can read in .grsirc
-   SetDisplay();
+   //SetDisplay();
    SetGRUTEnv();
    SetGRUTPluginHandlers();
    TGRUTint *input = 0;
@@ -87,6 +90,8 @@ void SetGRUTPluginHandlers() {
    gPluginMgr->AddHandler("TBrowserImp","GRootBrowser","GRootBrowser",
                           "Gui","NewBrowser(TBrowser *,const char *,Int_t,Int_t");
 }
+
+/*
 
 static int ReadUtmp() {
    FILE  *utmp;
@@ -179,7 +184,7 @@ static void SetDisplay()  {
    }
 }
 
-
+*/
 
 
 

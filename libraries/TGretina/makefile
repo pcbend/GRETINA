@@ -1,7 +1,7 @@
 
-OBJECTS = TGretina.o TGretinaDict.o 
+OBJECTS = TGretina.o TGretinaHit.o TGretinaDict.o 
 INCDIR = $(BASE)/include
-DICTOBJ = $(INCDIR)/TGretina.h 
+DICTOBJ = $(INCDIR)/TGretina.h $(INCDIR)/TGretinaHit.h 
 DICTNAM = TGretina
 
 CFLAGS += -fPIC

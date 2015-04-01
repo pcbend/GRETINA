@@ -51,6 +51,8 @@ class G2Fragment : public TObject {
 
     const inline G2Segment &Get(unsigned int &i) { return GetSegment(i); }
 
+    const inline int GetSegmentSize() { return fSegments.size(); }
+
   private:
     Int_t   fCrystal;
     Int_t   fNumberHits;
