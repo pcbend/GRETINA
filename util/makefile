@@ -1,4 +1,4 @@
-CXXTARGET = Root2Rad draw_pw_hit
+CXXTARGET = Root2Rad draw_pw_hit MakeGretinaTree
 ROOTTARGET = #MakeMatrices MakeTimeDiffSpec Make1DChargeHistograms offsetadd offsetfind offsetfindtree bufferclean
 
 
