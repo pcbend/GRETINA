@@ -1,4 +1,4 @@
-CXXTARGET = Root2Rad
+CXXTARGET = Root2Rad draw_pw_hit
 ROOTTARGET = #MakeMatrices MakeTimeDiffSpec Make1DChargeHistograms offsetadd offsetfind offsetfindtree bufferclean
 
 
@@ -29,7 +29,7 @@ end:
 
 $(BINDIR)/%: %.cxx
 	@printf " ${COM_COLOR}%s ${OBJ_COLOR}%s${NO_COLOR}" $(COMP_STRING) $(basename $^) 
-	@$(CXX) $^ $(CFLAGS) $(CPPFLAGS) -o$@ 2> temp.log || touch temp.errors
+	@$(CXX) $^ $(CFLAGS) $(CPPFLAGS) $(UTILFLAGS)  -o$@ 2> temp.log || touch temp.errors
 	@if test -e temp.errors; then \
 		printf "\r ${COM_COLOR}%s${OBJ_COLOR}%-30s ${ERROR_COLOR}%*s${NO_COLOR}\n" $(COMP_STRING) $(basename $^) 10 $(ERROR_STRING) \
 		&& $(CAT) temp.log && \
