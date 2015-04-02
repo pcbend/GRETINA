@@ -47,13 +47,26 @@ void DrawPwHit(const char *fname) {
          phoswall->SetWeightedPosition();
          if(phoswall->Multiplicity()>0) {
            phoswall->Print();
-           phoswall->Draw("");
-           gPad->AddExec("myexec",".x myexec.C");
-           new TCanvas();
-           phoswall->DrawXY("");
-           gPad->AddExec("myexec",".x myexec.C");
+           TCanvas *c;
+           if(!gPad)
+              c = new TCanvas();
+           else 
+              c = gPad->GetCanvas();
+           c->Clear();
+           c->Divide(2,1);
+           c->cd(1);
+           phoswall->DrawXY();
+           gPad->AddExec("DrawPWExec",".x DrawPWExec.C");
+           c->cd(2);
+           phoswall->Draw("DrawPWExec");
            app->Run(true);
-           gPad->GetCanvas()->Close();
+           //phoswall->Draw("");
+           //gPad->AddExec("myexec",".x myexec.C");
+           //new TCanvas();
+           //phoswall->DrawXY("");
+           //gPad->AddExec("myexec",".x myexec.C");
+           //app->Run(true);
+           //gPad->GetCanvas()->Close();
          }
       }
 

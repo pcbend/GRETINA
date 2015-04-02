@@ -2,6 +2,8 @@
 
 #include <Globals.h>
 
+//#include <string.h>
+
 #include <TROOT.h>
 
 #include <TPhosWall.h>
@@ -87,7 +89,7 @@ void TPhosWall::SetWeightedPosition() {
 }
 
 void TPhosWall::Print(Option_t *opt) {
-
+  
   for(int i=0;i<fPosition.size();i++) {
     if(i==fLargestHit) {
        printf(DGREEN);
@@ -183,6 +185,14 @@ Int_t   TPhosWall::GetCSmartSum(float res,int threshold) {
 
 void TPhosWall::Draw(Option_t *opt) {
   TH2I hitpat[4];
+
+  std::string exef;
+  std::string exex = ".x ";
+  if(strlen(opt)!=0) {
+    exef.append(opt);
+    exex.append(opt);
+    exex.append(".C");
+  }
   for(int x=0;x<4;x++) {
      hitpat[x] = TH2I(Form("hit%i",x),Form("Pixels %03i - %03i",x*64,x*64+63),8,0,8,8,0,8);
      hitpat[x].GetXaxis()->SetNdivisions(8);
@@ -192,12 +202,12 @@ void TPhosWall::Draw(Option_t *opt) {
   for(int x=0;x<fPixel.size();x++) {
     int hist = fPixel.at(x)/64;
     int col  = ((fPixel.at(x)-(hist*64))%8);
-    if(strcmp(opt,"order")==0) {
-      printf("reordering happening.\n");
-      if(col==7) col=5;
-      else if(col==6) col=7;
-      else if(col==5) col=6;
-    }
+    //if(strcmp(opt,"order")==0) {
+    //  printf("reordering happening.\n");
+    //  if(col==7) col=5;
+    //  else if(col==6) col=7;
+    //  else if(col==5) col=6;
+    //}
     int row  = (fPixel.at(x)-(hist*64))/8;
     if(strcmp(opt,"order")) {
       if(row==7) row=6;
@@ -210,21 +220,26 @@ void TPhosWall::Draw(Option_t *opt) {
   if(gPad) {
     if(!gPad->IsEditable())
       gROOT->MakeDefCanvas();
-    else   
-      gPad->GetCanvas()->Clear();
+    //else   
+    //  gPad->GetCanvas()->Clear();
   } else {
       gROOT->MakeDefCanvas();
   }
-  c = gPad->GetCanvas();
-  c->Divide(2,2);
-  c->cd(1); hitpat[0].DrawCopy("colz");
+  //c = gPad->GetCanvas();
+  TVirtualPad *mother = gPad;
+  mother->Divide(2,2);
+  mother->cd(1); hitpat[0].DrawCopy("colz");
   gPad->SetGrid();
-  c->cd(3); hitpat[1].DrawCopy("colz");
+  if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
+  mother->cd(3); hitpat[1].DrawCopy("colz");
   gPad->SetGrid();
-  c->cd(4); hitpat[2].DrawCopy("colz");
+  if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
+  mother->cd(4); hitpat[2].DrawCopy("colz");
   gPad->SetGrid();
-  c->cd(2); hitpat[3].DrawCopy("colz");
+  if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
+  mother->cd(2); hitpat[3].DrawCopy("colz");
   gPad->SetGrid();
+  if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
   gPad->Modified();
   gPad->Update();
   return;
@@ -239,16 +254,16 @@ void TPhosWall::DrawXY(Option_t *opt) {
                      fPosition.at(i).Y(),
                      fACharge.at(i));
   }
-  TCanvas *c;
+  //TCanvas *c;
   if(gPad) {
     if(!gPad->IsEditable())
       gROOT->MakeDefCanvas();
-    else   
-      gPad->GetCanvas()->Clear();
+    //else   
+    //  gPad->GetCanvas()->Clear();
   } else {
       gROOT->MakeDefCanvas();
   }
-  c = gPad->GetCanvas();
+  //c = gPad->GetCanvas();
   hitpattern.DrawCopy("colz");
   gPad->SetGrid();
   gPad->Modified();
