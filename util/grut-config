@@ -45,7 +45,7 @@ utildir=$GEBSYS/etc
 
 
 grutlibs="-lGEBFormat -lNucleus -lKinematics -lGROOT"
-detlibs="-lGretina -lPhosEall -lG2Format -lPWFormat"
+detlibs="-lGretina -lPhosWall -lG2Format -lPWFormat"
 grutmore="-lGRUTint"
 
 cflags="-std=c++0x -I$incdir"
