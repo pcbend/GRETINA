@@ -40,8 +40,9 @@ int main(int argc, char **argv) {
       } 
       x++;
       outfilename.assign(argv[x]);
+    } else {
+      multi.Add(argv[x]);
     }
-    multi.Add(argv[x]);
   }
 
   TGEBEvent *event = multi.Read();
