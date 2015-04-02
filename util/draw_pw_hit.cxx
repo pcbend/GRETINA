@@ -18,9 +18,13 @@ void DrawPwHit(const char *fname) {
   TGEBMultiFile multi; 
   multi.Add(fname);
 
-  TGEBEvent event = *(multi.Read());
-  Long_t LastTime = event.GetTimeStamp();
-  Int_t  LastType = event.GetEventType();
+  TGEBEvent *event = multi.Read();
+  if(!event) {
+     printf("Error reading event from %s\n",fname);
+     return;
+  }
+  Long_t LastTime = event->GetTimeStamp();
+  Int_t  LastType = event->GetEventType();
 
   TGretina  *gretina  = new TGretina;
   TPhosWall *phoswall = new TPhosWall;
@@ -33,8 +37,10 @@ void DrawPwHit(const char *fname) {
   bool run = true;
   while(run) {
   
-      event = *(multi.Read());
-      if(event.GetEventType()!=17) {
+      event = multi.Read();
+      if(!event)
+         break;
+      if(event->GetEventType()!=17) {
          notphoscounter++;
          if(notphoscounter>10000) {
             printf("Are you sure %s contains PhosWall events??\n",fname);
@@ -43,7 +49,7 @@ void DrawPwHit(const char *fname) {
          continue;
       }
 
-      if(abs(event.GetTimeStamp()-LastTime)>500) {
+      if(abs(event->GetTimeStamp()-LastTime)>500) {
          phoswall->SetWeightedPosition();
          if(phoswall->Multiplicity()>0) {
            phoswall->Print();
@@ -70,10 +76,10 @@ void DrawPwHit(const char *fname) {
          }
       }
 
-      switch(event.GetEventType()) {
+      switch(event->GetEventType()) {
         case 17: {
-            TGEBEvent::TPWBank *bank = (TGEBEvent::TPWBank*)event.GetData();
-            PWFragment frag(event);
+            TGEBEvent::TPWBank *bank = (TGEBEvent::TPWBank*)event->GetData();
+            PWFragment frag(*event);
             phoswall->AddPWHit(frag);
             phoscounter++;
           }
@@ -84,6 +90,9 @@ void DrawPwHit(const char *fname) {
 
       };
   }
+  printf("end of file.\n");
+  return;
+
 }
 
 

@@ -44,7 +44,7 @@ bool TGEBMultiFile::GetNextEvent(int i) {
     fBytesRead.at(i) += bytes;
 
   //printf("bytes = %i\n",bytes);
-  if(bytes<1) {
+  if(bytes<1 && i>-1) {
     delete fFiles.at(i); 
     fFiles.erase(fFiles.begin()+i);
     delete fEvents.at(i);
@@ -67,8 +67,9 @@ void TGEBMultiFile::Close()  {  }
 TGEBEvent *TGEBMultiFile::Read()  { 
   //int pos = std::min_element(std::begin(fEvents),std::end(fEvents)) - std::begin(fEvents); 
   int pos = FindMinimum();
-
-
+  //printf("FindMinimum = %i\n",pos);
+  if(pos<0)
+     return 0;
   //printf("pos = %i\n",pos);
   //std::cout << "pos = " <<  std::min_element(std::begin(fEvents),std::end(fEvents)) - std::begin(fEvents) << std::endl; 
   TGEBEvent *gevent = fEvents.at(pos); 
@@ -96,6 +97,8 @@ void TGEBMultiFile::Print(Option_t *opt) {
 
 
 int TGEBMultiFile::FindMinimum() {
+  if(fEvents.size()==0)
+    return -1;
   if(fEvents.size()==1)
     return 0;
   int smallest = 0;
