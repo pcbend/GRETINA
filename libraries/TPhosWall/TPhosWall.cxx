@@ -2,24 +2,39 @@
 
 #include <Globals.h>
 
-//#include <string.h>
-
 #include <TROOT.h>
 
 #include <TPhosWall.h>
 #include <TMath.h>
+#include <TRandom.h>
 
-
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <utility>
 
 ClassImp(TPhosWall)
 
 
 int TPhosWall::fHitPatternCounter=0;
 
+
+bool TPhosWall::fCalMapsSet = false;
+
+std::map<int,std::pair<float,float> > TPhosWall::fAMap;
+std::map<int,std::pair<float,float> > TPhosWall::fBMap;
+std::map<int,std::pair<float,float> > TPhosWall::fCMap;
+
+
+
+
+
 TPhosWall::TPhosWall() { 
    Clear(); 
    if(!fPositionsSet)
       SetWallPositions();
+   if(!fCalMapsSet)
+      SetCalMaps();
 
 }
 
@@ -386,12 +401,169 @@ void TPhosWall::SetWallPositions() {
 
 
 
+void TPhosWall::SetCalMaps() {
+
+  fCalMapsSet = true;
+
+  std::string fMapAfile = getenv("GEBSYS");
+  std::string fMapBfile = getenv("GEBSYS");
+  std::string fMapCfile = getenv("GEBSYS");
+  fMapAfile.append("/libraries/TPhosWall/Acoeff-322-8x8.xy");
+  fMapBfile.append("/libraries/TPhosWall/Bcoeff-322-8x8.xy");
+  fMapCfile.append("/libraries/TPhosWall/Ccoeff-322-8x8.xy");
+  //printf("fMapAfile = %s\n",fMapAfile.c_str());
+
+  std::string line;
+  std::ifstream infile;
+  infile.open(fMapAfile.c_str());
+  int junk,pixel;
+  float gain,offset;
+  while(getline(infile,line)) {
+    if(line.length()<10) 
+       continue;
+    std::stringstream ss(line);
+    ss >> junk; ss >> pixel;
+    ss >> offset; ss >> gain;
+    fAMap[pixel] = std::make_pair(offset,gain);
+    //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
+  }
+
+  infile.close();
+  infile.open(fMapBfile.c_str());
+  while(getline(infile,line)) {
+    if(line.length()<10) 
+       continue;
+    std::stringstream ss(line);
+    ss >> junk; ss >> pixel;
+    ss >> offset; ss >> gain;
+    fBMap[pixel] = std::make_pair(offset,gain);
+    //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
+  }
+
+  infile.close();
+  infile.open(fMapCfile.c_str());
+  while(getline(infile,line)) {
+    if(line.length()<10) 
+       continue;
+    std::stringstream ss(line);
+    ss >> junk; ss >> pixel;
+    ss >> offset; ss >> gain;
+    fCMap[pixel] = std::make_pair(offset,gain);
+    //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
+  }
+
+  //printf("fAMap.size() = %i\n",fAMap.size());
 
 
 
+//std::map<int,std::pair<float,float> > TPhosWall::fAMap;
+//std::map<int,std::pair<float,float> > TPhosWall::fBMap;
+//std::map<int,std::pair<float,float> > TPhosWall::fCMap;
+
+};
+
+
+Float_t TPhosWall::GetACal() {
+   if(fLargestHit>=fTime.size()) 
+      return 0.0; 
+   if(!fCalMapsSet)
+      return 0.0;
+   float tmp = (Float_t)fACharge.at(fLargestHit) + gRandom->Uniform(); 
+   tmp = tmp* std::get<1>(fAMap[fLargestHit]) + std::get<0>(fAMap[fLargestHit]);
+   return tmp;
+}
+
+
+Float_t TPhosWall::GetBCal() {
+   if(fLargestHit>=fTime.size()) 
+      return 0.0; 
+   if(!fCalMapsSet)
+      return 0.0;
+   float tmp = (Float_t)fBCharge.at(fLargestHit) + gRandom->Uniform(); 
+   tmp = tmp* std::get<1>(fBMap[fLargestHit]) + std::get<0>(fBMap[fLargestHit]);
+   return tmp;
+}
+
+
+Float_t TPhosWall::GetCCal() {
+   if(fLargestHit>=fTime.size()) 
+      return 0.0; 
+   if(!fCalMapsSet)
+      return 0.0;
+   float tmp = (Float_t)fCCharge.at(fLargestHit) + gRandom->Uniform(); 
+   tmp = tmp* std::get<1>(fCMap[fLargestHit]) + std::get<0>(fCMap[fLargestHit]);
+   return tmp;
+}
+
+
+Float_t   TPhosWall::GetACalSmartSum(float res,float threshold) { 
+  Float_t eng = 0.0;
+  if(Size()<1)
+     return eng;
+  int lpixel = GetPixel();
+  TVector3 lvec = *(FindWallPosition(lpixel));
+  for(int y=0;y<Size();y++) {
+    int cpixel = Pixel(y);
+    if((cpixel/64)!=(lpixel/64))
+       continue;
+    TVector3 cvec = *(FindWallPosition(cpixel));
+    float mag = (lvec-cvec).Mag();
+    if(mag<res) {
+      float tmp = A(y)*std::get<1>(fAMap[y]) + std::get<0>(fAMap[y]);
+      if(tmp>threshold) {
+        eng += tmp;
+      }
+    }
+  }                                                          
+  return eng;
+}
 
 
 
+Float_t   TPhosWall::GetBCalSmartSum(float res,float threshold) { 
+  Float_t eng = 0.0;
+  if(Size()<1)
+     return eng;
+  int lpixel = GetPixel();
+  TVector3 lvec = *(FindWallPosition(lpixel));
+  for(int y=0;y<Size();y++) {
+    int cpixel = Pixel(y);
+    if((cpixel/64)!=(lpixel/64))
+       continue;
+    TVector3 cvec = *(FindWallPosition(cpixel));
+    float mag = (lvec-cvec).Mag();
+    if(mag<res) { 
+      float tmp = B(y)*std::get<1>(fBMap[y]) + std::get<0>(fBMap[y]);
+      if (tmp>threshold) {
+        eng += tmp;
+      }
+    }
+  }                                                          
+  return eng;
+}
+
+
+Float_t   TPhosWall::GetCCalSmartSum(float res,float threshold) { 
+  Float_t eng = 0.0;
+  if(Size()<1)
+     return eng;
+  int lpixel = GetPixel();
+  TVector3 lvec = *(FindWallPosition(lpixel));
+  for(int y=0;y<Size();y++) {
+    int cpixel = Pixel(y);
+    if((cpixel/64)!=(lpixel/64))
+       continue;
+    TVector3 cvec = *(FindWallPosition(cpixel));
+    float mag = (lvec-cvec).Mag();
+    if(mag<res) { 
+      float tmp = C(y)*std::get<1>(fCMap[y]) + std::get<0>(fCMap[y]);
+      if (tmp>threshold) {
+        eng += tmp;
+      }
+    }
+  }                                                          
+  return eng;
+}
 
 
 

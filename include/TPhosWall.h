@@ -6,6 +6,8 @@
 #include <PWFragment.h>
 #include <PWSegment.h>
 
+#include <map>
+
 class TPhosWall : public TObject {
   
   public:
@@ -18,6 +20,9 @@ class TPhosWall : public TObject {
     const inline Int_t    GetA()        { if(fLargestHit>=fTime.size()) return 0; return (Int_t)fACharge.at(fLargestHit); }
     const inline Int_t    GetB()        { if(fLargestHit>=fTime.size()) return 0; return (Int_t)fBCharge.at(fLargestHit); }
     const inline Int_t    GetC()        { if(fLargestHit>=fTime.size()) return 0; return (Int_t)fCCharge.at(fLargestHit); }
+                 Float_t  GetACal();    
+                 Float_t  GetBCal();    
+                 Float_t  GetCCal();    
     const inline Int_t    GetTime()     { if(fLargestHit>=fTime.size()) return 0; return (Int_t)fTime.at(fLargestHit);    }
     const inline Int_t    GetLargestNumber() { return fLargestHit; }  
     const inline Int_t    GetPixel()    { if(fLargestHit>=fPixel.size()) return -1; return (Int_t)fPixel.at(fLargestHit); }
@@ -26,6 +31,8 @@ class TPhosWall : public TObject {
     const inline Int_t    GetASum()   { int chg=0; for(int x=0;x<fACharge.size();x++) {chg+=fACharge.at(x);} return chg;}
     const inline Int_t    GetBSum()   { int chg=0; for(int x=0;x<fBCharge.size();x++) {chg+=fBCharge.at(x);} return chg;}
     const inline Int_t    GetCSum()   { int chg=0; for(int x=0;x<fCCharge.size();x++) {chg+=fCCharge.at(x);} return chg;}
+
+
 
 
     const inline Int_t    A(const int &i)        { return (Int_t)fACharge.at(i); }
@@ -38,6 +45,12 @@ class TPhosWall : public TObject {
     Int_t    GetBSmartSum(float res = 20.0,int threshold=200);
     Int_t    GetCSmartSum(float res = 20.0,int threshold=200); 
     //inline const int NumberOfPWHits() { return PhosWallHits.size(); }
+
+    Float_t  GetACalSmartSum(float res = 20.0,Float_t threshold=50.0); 
+    Float_t  GetBCalSmartSum(float res = 20.0,Float_t threshold=50.0);
+    Float_t  GetCCalSmartSum(float res = 20.0,Float_t threshold=50.0); 
+
+
 
     void Print(Option_t *opt = "");
     void Clear(Option_t *opt = "");
@@ -71,6 +84,13 @@ class TPhosWall : public TObject {
     static TVector3 *fWallPositions[257];
     static bool      fPositionsSet;
     static void      SetWallPositions();
+
+
+    void SetCalMaps();
+    static bool fCalMapsSet;
+    static std::map<int,std::pair<float,float> > fAMap;
+    static std::map<int,std::pair<float,float> > fBMap;
+    static std::map<int,std::pair<float,float> > fCMap;
 
 
   ClassDef(TPhosWall,1);
