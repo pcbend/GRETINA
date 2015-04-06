@@ -435,8 +435,8 @@ void TPhosWall::SetCalMaps() {
        continue;
     std::stringstream ss(line);
     ss >> junk; ss >> pixel;
-    ss >> offset; ss >> gain*100;
-    fBMap[pixel] = std::make_pair(offset,gain);
+    ss >> offset; ss >> gain;
+    fBMap[pixel] = std::make_pair(offset,gain*100.0);
     //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
   }
 
@@ -447,8 +447,8 @@ void TPhosWall::SetCalMaps() {
        continue;
     std::stringstream ss(line);
     ss >> junk; ss >> pixel;
-    ss >> offset; ss >> gain*100;
-    fCMap[pixel] = std::make_pair(offset,gain);
+    ss >> offset; ss >> gain;
+    fCMap[pixel] = std::make_pair(offset,gain*100.0);
     //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
   }
 
