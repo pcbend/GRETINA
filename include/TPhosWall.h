@@ -59,7 +59,8 @@ class TPhosWall : public TObject {
     void DrawXY(Option_t *opt="");
 
     static TVector3 *FindWallPosition(Int_t &pixel) { if(pixel<0||pixel>256) pixel=256;  return fWallPositions[pixel]; }
-    void SetWeightedPosition();
+    void FindWeightedPosition();
+    void SetWeightedPosition(const TVector3 &temp)  { fWeightedPosition = temp; }    
 
     Int_t Multiplicity() { return fMultiplicity; }
 
@@ -67,6 +68,7 @@ class TPhosWall : public TObject {
   private:
     //std::vector<PWFragment> PhosWallHits;
     static int fHitPatternCounter;
+
 
     Long_t   fTimeStamp;
     Short_t  fLargestHit;

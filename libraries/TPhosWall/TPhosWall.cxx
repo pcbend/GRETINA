@@ -62,7 +62,7 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
    }
 }
 
-void TPhosWall::SetWeightedPosition() {
+void TPhosWall::FindWeightedPosition() {
   if(fACharge.size()<=fLargestHit)
      return;
   float ChargeSum=0.0;
@@ -71,8 +71,8 @@ void TPhosWall::SetWeightedPosition() {
     if((fPosition.at(fLargestHit)-fPosition.at(i)).Mag()<MaxPixelDistance) 
       ChargeSum += BCal(i);
   }
-  fWeightedPosition =  fPosition.at(fLargestHit);
-  fWeightedPosition *= ((BCal(fLargestHit))/ChargeSum);
+  TVector3 result =  fPosition.at(fLargestHit);
+  result *= ((BCal(fLargestHit))/ChargeSum);
   double x =0.0;
   double y =0.0;
   double z =0.0;
@@ -93,11 +93,12 @@ void TPhosWall::SetWeightedPosition() {
         ((fPixel.at(fLargestHit)/64) == (fPixel.at(i)/64)) ) {
       //fMultiplicity++;
       TVector3 temp = ((BCal(i))/ChargeSum)*(fPosition.at(i));
-      fWeightedPosition += temp;
+      result += temp;
     } else {
       fMultiplicity++;
     }
   }
+  SetWeightedPosition(result);
 //  printf(DYELLOW);
 //  printf("\t[%02i]",fMultiplicity);fWeightedPosition.Print();
 //  printf(RESET_COLOR);
