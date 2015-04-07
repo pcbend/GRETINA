@@ -81,7 +81,7 @@ void TPhosWall::SetWeightedPosition() {
 
   
   for(int i=0;i<fPosition.size();i++) {
-    printf("Mag: %.02f\tAChg = %i\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),BCal(i));
+    printf("Mag: %.02f\tBCal = %.02f\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),BCal(i));
     if(i==fLargestHit) {
        printf(DGREEN);
        printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
