@@ -33,11 +33,12 @@ class TPhosWall : public TObject {
     const inline Int_t    GetCSum()   { int chg=0; for(int x=0;x<fCCharge.size();x++) {chg+=fCCharge.at(x);} return chg;}
 
 
-
-
     const inline Int_t    A(const int &i)        { return (Int_t)fACharge.at(i); }
     const inline Int_t    B(const int &i)        { return (Int_t)fBCharge.at(i); }
     const inline Int_t    C(const int &i)        { return (Int_t)fCCharge.at(i); }
+               Float_t    ACal(const int &i);
+               Float_t    BCal(const int &i);
+               Float_t    CCal(const int &i);
     const inline Int_t    Time(const int &i)     { return (Int_t)fTime.at(i);    }
     const inline Int_t    Pixel(const int &i)    { return (Int_t)fPixel.at(i); }
 
