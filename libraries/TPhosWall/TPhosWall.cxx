@@ -81,14 +81,14 @@ void TPhosWall::SetWeightedPosition() {
 
   
   for(int i=0;i<fPosition.size();i++) {
-    printf("Mag: %.02f\tBCal = %.02f\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),BCal(i));
+//    printf("Mag: %.02f\tBCal = %.02f\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),BCal(i));
     if(i==fLargestHit) {
-       printf(DGREEN);
-       printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
-       printf(RESET_COLOR);
+//       printf(DGREEN);
+//       printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
+//       printf(RESET_COLOR);
        continue;
     }
-    printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
+//    printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
     if( ((fPosition.at(fLargestHit)-fPosition.at(i)).Mag()<MaxPixelDistance) &&
         ((fPixel.at(fLargestHit)/64) == (fPixel.at(i)/64)) ) {
       //fMultiplicity++;
@@ -98,10 +98,10 @@ void TPhosWall::SetWeightedPosition() {
       fMultiplicity++;
     }
   }
-  printf(DYELLOW);
-  printf("\t[%02i]",fMultiplicity);fWeightedPosition.Print();
-  printf(RESET_COLOR);
-  printf("----------------------------------\n");
+//  printf(DYELLOW);
+//  printf("\t[%02i]",fMultiplicity);fWeightedPosition.Print();
+//  printf(RESET_COLOR);
+//  printf("----------------------------------\n");
 
 }
 
