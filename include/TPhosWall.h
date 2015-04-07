@@ -46,9 +46,9 @@ class TPhosWall : public TObject {
     Int_t    GetCSmartSum(float res = 20.0,int threshold=200); 
     //inline const int NumberOfPWHits() { return PhosWallHits.size(); }
 
-    Float_t  GetACalSmartSum(float res = 20.0,Float_t threshold=50.0); 
-    Float_t  GetBCalSmartSum(float res = 20.0,Float_t threshold=50.0);
-    Float_t  GetCCalSmartSum(float res = 20.0,Float_t threshold=50.0); 
+    Float_t  GetACalSmartSum(float res = 20.0,Float_t threshold=0.10); 
+    Float_t  GetBCalSmartSum(float res = 20.0,Float_t threshold=0.10);
+    Float_t  GetCCalSmartSum(float res = 20.0,Float_t threshold=0.10); 
 
 
 
