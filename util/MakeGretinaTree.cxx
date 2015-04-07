@@ -91,7 +91,9 @@ int main(int argc, char **argv) {
     if(abs(event->GetTimeStamp()-LastTime)>500) {  // 5 us build time.
       phoswall->FindWeightedPosition();
       gretina->BuildAddBack();
-      
+     
+      phoswall->GetPosition()->Print();
+
       tree->Fill();      
 
       gretina->Clear();
