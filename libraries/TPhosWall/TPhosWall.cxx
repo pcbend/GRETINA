@@ -79,8 +79,7 @@ void TPhosWall::FindWeightedPosition() {
  
   fMultiplicity = 1;
 
-  printf(DRED) 
-  printf("START:" RESET_COLOR "\n");
+  printf(DRED "START:" RESET_COLOR "\n");
 
   for(int i=0;i<fPosition.size();i++) {
     printf("Mag: %.02f\tBCal = %.02f\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),BCal(i));
