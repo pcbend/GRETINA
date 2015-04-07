@@ -98,7 +98,9 @@ void TPhosWall::SetWeightedPosition() {
       fMultiplicity++;
     }
   }
+  printf(DYELLOW)
   printf("\t[%02i]",fMultiplicity);fWeightedPosition.Print();
+  printf(RESET_COLOR);
   printf("----------------------------------\n");
 
 }
