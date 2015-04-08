@@ -73,8 +73,8 @@ int main(int argc, char **argv) {
   TFile *outfile = new TFile(outfilename.c_str(),"recreate");
   TTree *tree = new TTree("Data","Data");
   TTree::SetMaxTreeSize((Long_t)1*(Long_t)1024*(Long_t)1024*(Long_t)1024);
-  tree->Bronch("TGretina","TGretina",&gretina);
-  tree->Bronch("TPhosWall","TPhosWall",&phoswall);
+  tree->Branch("TGretina","TGretina",&gretina);
+  tree->Branch("TPhosWall","TPhosWall",&phoswall);
 
   bool run = true;
   int loopcounter=0;
