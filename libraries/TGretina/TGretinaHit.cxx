@@ -89,7 +89,7 @@ TGretinaHit::TGretinaHit(G2Fragment &frag) {
   }
   //printf("fFirstInteraction = %i\n",fFirstInteraction);
   //printf("----------------------\n");
-  //fCorePosition = fInteractionPosition.at(fFirstInteraction);
+  fCorePosition = fInteractionPosition.at(fFirstInteraction);
   fCurrentTime = fTimeStamp - fWalkCorrection;
 
 }
