@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
       phoswall->FindWeightedPosition();
       gretina->BuildAddBack();
      
-      phoswall->GetPosition().Print();
+      //phoswall->GetPosition().Print();
 
       tree->Fill();      
 
