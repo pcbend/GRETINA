@@ -26,10 +26,11 @@ class TGretinaHit : public TObject {
     void  Clear(Option_t *opt="");
     const Int_t Size()  { return fSegmentNumber.size(); }
 
-    TVector3 GetPosition() { 
+    TVector3 &GetPosition() { 
        //printf("fFirstInteraction =  %i |  fInteractionPosition.size() = %i \n",
        //        fFirstInteraction,fInteractionPosition.size());
-       return fInteractionPosition.at(fFirstInteraction);
+       //return fInteractionPosition.at(fFirstInteraction);
+       return fCorePosition;
     }
 
     inline bool CheckPosition() { if(fInteractionPosition.size()>0) return true; return false; }

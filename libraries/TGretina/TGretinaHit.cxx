@@ -73,15 +73,18 @@ TGretinaHit::TGretinaHit(G2Fragment &frag) {
     G2Segment seg = frag.GetSegment(tmp);
 
     fSegmentNumber.push_back(seg.Number());
-    fSegmentEnergy.push_back(seg.SegmentEnergy());
+    fSegmentEnergy.push_back(fabs(seg.SegmentEnergy()));
     fInteractionPosition.push_back(TGretina::FindPosition(fCrystalId,
                                                           seg.X(),seg.Y(),seg.Z()));
-    if(seg.Energy()>fFirstSegmentValue) {
+    float tmpsegenergy = seg.Energy();
+    if(tmpsegenergy<0.01)
+      tmpsegenergy = 0.01;
+    if(tmpsegenergy>fFirstSegmentValue) {
       if(x>0) {
          fSecondSegmentValue = fFirstSegmentValue;
          fSecondInteraction  = fFirstInteraction;
       }
-      fFirstSegmentValue = seg.Energy();
+      fFirstSegmentValue = tmpsegenergy;
       fFirstInteraction  = x;
     }
     //printf("\t%i\tseg.Enery() : %.02f \n",x,seg.Energy());
@@ -89,9 +92,10 @@ TGretinaHit::TGretinaHit(G2Fragment &frag) {
   }
   //printf("fFirstInteraction = %i\n",fFirstInteraction);
   //printf("----------------------\n");
-  fCorePosition = fInteractionPosition.at(fFirstInteraction);
-  fCurrentTime = fTimeStamp - fWalkCorrection;
-
+  if(fFirstInteraction>-1) {
+    fCorePosition = fInteractionPosition.at(fFirstInteraction);
+    fCurrentTime = fTimeStamp - fWalkCorrection;
+  }
 }
 
 void TGretinaHit::Print(Option_t *opt) { }
@@ -108,8 +112,8 @@ void TGretinaHit::Clear(Option_t *opt) {
     fCoreEnergy     = 0.0;
     fCoreCharge     =   0;
 
-    fFirstInteraction  = 0;
-    fSecondInteraction = 0;
+    fFirstInteraction  = -1;
+    fSecondInteraction = -1;
  
     fCorePosition.SetXYZ(0,0,1);
     fCurrentTime = 0;
