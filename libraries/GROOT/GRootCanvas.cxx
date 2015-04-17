@@ -11,6 +11,7 @@
 #include "RConfigure.h"
 
 #include "GRootCanvas.h"
+#include "GRootCanvasManager.h"
 
 #include "TRootApplication.h"
 #include "TRootHelpDialog.h"
@@ -662,6 +663,8 @@ GRootCanvas::~GRootCanvas()
 void GRootCanvas::Close()
 {
    // Called via TCanvasImp interface by TCanvas.
+   //printf("Closing canvas 0x%08x\n",((TCanvasImp*)this)->Canvas());
+   GRootCanvasManager::RemoveCanvas(((TCanvasImp*)this)->Canvas());
    TVirtualPadEditor* gged = TVirtualPadEditor::GetPadEditor(kFALSE);
    if(gged && gged->GetCanvas() == fCanvas) {
       if (fEmbedded) {
@@ -1887,15 +1890,19 @@ Bool_t GRootCanvas::HandleContainerKey(Event_t *event)
          gVirtualX->QueryPointer(wid, dum1, dum2, mx, my, mx, my, mask);
          switch (keysym) {
             case 0x1012: // left
+               printf("LEFT\n");
                //gVirtualX->Warp(--mx, my, wid);
                break;
             case 0x1013: // up
+               printf("UP\n");
                //gVirtualX->Warp(mx, --my, wid);
                break;
             case 0x1014: // right
+               printf("RIGHT\n");
                //gVirtualX->Warp(++mx, my, wid);
                break;
             case 0x1015: // down
+               printf("DOWN\n");
                //gVirtualX->Warp(mx, ++my, wid);
                break;
             default:

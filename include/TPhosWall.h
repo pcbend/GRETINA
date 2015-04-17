@@ -62,6 +62,8 @@ class TPhosWall : public TObject {
     void FindWeightedPosition();
     void SetWeightedPosition(const TVector3 &temp)  { fWeightedPosition = temp; }    
 
+    TVector3 GetWallPosition(int pixelnumber,double delta=17.5);
+
     Int_t Multiplicity() { return fMultiplicity; }
 
 

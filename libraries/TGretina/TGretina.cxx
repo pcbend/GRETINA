@@ -54,9 +54,11 @@ void TGretina::Clear(Option_t *opt) {
 
 
 TVector3 TGretina::FindPosition(int cryId,Float_t x,Float_t y,Float_t z) {
-  Int_t detectorPosition = ((cryId & 0xfffc)>>2);
-  Int_t crystalNumber = (cryId & 0x0003);
-  detectorPosition -= 1;
+  //Int_t detectorPosition = ((cryId & 0xfffc)>>2);
+  //Int_t crystalNumber = (cryId & 0x0003);
+  //detectorPosition -= 1;
+  Int_t detectorPosition = cryId/4;
+  Int_t crystalNumber    = cryId%4;
   /* x,y,z need to be in cm to work properly. Depending on the 
      source of the mapping, you might need to convert from mm 
      (if you read from crmat.linux). */

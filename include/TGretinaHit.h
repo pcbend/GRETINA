@@ -59,8 +59,15 @@ class TGretinaHit : public TObject {
       return tmp;
    }
 
+   
+   inline Int_t   GetFirstInteraction()   { return fFirstInteraction;     }
+   inline Int_t   GetSecondInteraction() { return fSecondInteraction;    }
+   inline Int_t   NumberOfSegments() { return fSegmentNumber.size(); }
+   inline Int_t   GetSegmentId(const int &i)  { return fSegmentNumber.at(i); }
+   inline Float_t GetSegmentEng(const int &i) { return fSegmentEnergy.at(i); }
+   inline TVector3 GetInteractionPosition(const int &i) { return fInteractionPosition.at(i); }
 
-
+   //void SetPosition(TVector3 &vec) { fCorePosition = vec; } 
 
   private:
     Long_t  fTimeStamp;

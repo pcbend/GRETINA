@@ -219,20 +219,19 @@ void TPhosWall::Draw(Option_t *opt) {
   }
   for(int x=0;x<fPixel.size();x++) {
     int hist = fPixel.at(x)/64;
-    int col  = ((fPixel.at(x)-(hist*64))%8);
+    int row  = ((fPixel.at(x)-(hist*64))%8);
     //if(strcmp(opt,"order")==0) {
     //  printf("reordering happening.\n");
     //  if(col==7) col=5;
     //  else if(col==6) col=7;
     //  else if(col==5) col=6;
     //}
-    int row  = (fPixel.at(x)-(hist*64))/8;
-    if(strcmp(opt,"order")) {
-      if(row==7) row=6;
-      else if(row==6) row=7;
-    }
+    int col  = (fPixel.at(x)-(hist*64))/8;
+    //if(strcmp(opt,"order")) {
+    //   row = abs(row-7);
+    //}
     hitpat[hist].Fill(row,col,fACharge.at(x));
-    printf("\t\tPixel[%03i]  r[%02i] c[%02i]   %i\n",fPixel.at(x),row,col,fACharge.at(x));
+    printf("\t\tPixel[%03i | %02i]  r[%02i] c[%02i]   %i\n",fPixel.at(x),fPixel.at(x)-hist*64,row,col,fACharge.at(x));
   }
   TCanvas *c;
   if(gPad) {
@@ -249,13 +248,13 @@ void TPhosWall::Draw(Option_t *opt) {
   mother->cd(1); hitpat[0].DrawCopy("colz");
   gPad->SetGrid();
   if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
-  mother->cd(3); hitpat[1].DrawCopy("colz");
+  mother->cd(2); hitpat[1].DrawCopy("colz");
   gPad->SetGrid();
   if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
   mother->cd(4); hitpat[2].DrawCopy("colz");
   gPad->SetGrid();
   if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
-  mother->cd(2); hitpat[3].DrawCopy("colz");
+  mother->cd(3); hitpat[3].DrawCopy("colz");
   gPad->SetGrid();
   if(exef.size()) gPad->AddExec(exef.c_str(),exex.c_str());
   gPad->Modified();
@@ -267,9 +266,10 @@ void TPhosWall::Draw(Option_t *opt) {
 void TPhosWall::DrawXY(Option_t *opt) {
   TH2I hitpattern("hitpattern","PWFragmet XY Hit Pattern",
                    116,-58,58,116,-58,58);
-  for(int i=0;i<fPosition.size();i++) {
-     hitpattern.Fill(fPosition.at(i).X(),
-                     fPosition.at(i).Y(),
+  for(int i=0;i<fPixel.size();i++) {
+     TVector3 vec = GetWallPosition(fPixel.at(i));
+     hitpattern.Fill(vec.X(),
+                     vec.Y(),
                      fACharge.at(i));
   }
   //TCanvas *c;
@@ -314,6 +314,77 @@ void TPhosWall::DrawXY(Option_t *opt) {
 TVector3 *TPhosWall::fWallPositions[257];
 
 bool TPhosWall::fPositionsSet = false;
+
+TVector3 TPhosWall::GetWallPosition(int pixelnumber,double delta) {
+   //printf("Calculating PhosWall positions.\n");
+
+   int det   = pixelnumber/64;
+   int pixel = pixelnumber - (64*det);
+   TVector3 position; 
+
+   double L   = 49.0;
+   double Ro  = 55.0;
+   double Psi = 50.6*TMath::DegToRad();
+
+      
+
+   //int x = pixel/8;           
+//   int x = (pixel%8);
+   //int y = abs((pixel%8)-7);  
+//   int y = (pixel/8);
+
+   int x,y;
+   switch(det) {
+      case 0:
+         x = (pixel%8);
+         y = (pixel/8);
+         break;
+      case 1:
+         x = (pixel/8);
+         y = abs((pixel%8)-7);
+         break;
+      case 2:
+         x = abs((pixel%8)-7);
+         y = abs((pixel/8)-7);
+         break;
+      case 3:
+         x = abs((pixel/8)-7);
+         y = (pixel&8); 
+         break;
+   }
+   double localx = ((double(x)+1.0)*0.17) + ((double(x)+0.5)*6.08);
+   double localy = ((double(y)+1.0)*0.17) + ((double(y)+0.5)*6.08);
+
+   double globalx = (L/2.0) - localx + delta;
+   double globaly = Ro*TMath::Sin(Psi) - ((L/2.0)-localy)*TMath::Cos(Psi) - delta;
+   double globalz = Ro*TMath::Cos(Psi) + ((L/2.0)-localy)*TMath::Sin(Psi);
+/*
+   switch(det) {
+      case 0:
+        globalx =  globalx;
+        globaly =  globaly;
+        break;
+      case 1:
+        globalx = -globalx;
+        globaly =  globaly;
+        break;
+      case 2:
+        globalx = -globalx;
+        globaly = -globaly;
+        break;
+      case 3:
+        globalx =  globalx;
+        globaly = -globaly;
+        break;
+   };
+*/
+   position.SetXYZ(globalx,globaly,globalz);
+   position.RotateZ(((double)det)*TMath::PiOver2());
+   //position.SetPhi(position.Phi()+(double)det*TMath::PiOver2());
+
+   return position;
+}
+
 
 void TPhosWall::SetWallPositions() {
    printf("Setting PhosWall positions.\n");

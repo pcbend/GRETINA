@@ -50,7 +50,7 @@ void DrawPwHit(const char *fname) {
       }
 
       if(abs(event->GetTimeStamp()-LastTime)>500) {
-         phoswall->SetWeightedPosition();
+         phoswall->FindWeightedPosition();
          if(phoswall->Multiplicity()>0) {
            phoswall->Print();
            TCanvas *c;
