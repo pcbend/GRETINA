@@ -6,19 +6,22 @@
 
 class GCanvas : public TCanvas {
    public:
-        GCanvas(Bool_t build = kTRUE);
-        GCanvas(const char* name, const char* title = "", Int_t form = 1);
-        GCanvas(const char* name, const char* title, Int_t ww, Int_t wh);
-        GCanvas(const char* name, Int_t ww, Int_t wh, Int_t winid);
-        GCanvas(const char* name, const char* title, Int_t wtopx, Int_t wtopy, Int_t ww, Int_t wh);
-        virtual ~GCanvas();
+      GCanvas(Bool_t build = kTRUE);
+      GCanvas(const char* name, const char* title = "", Int_t form = 1);
+      GCanvas(const char* name, const char* title, Int_t ww, Int_t wh);
+      GCanvas(const char* name, Int_t ww, Int_t wh, Int_t winid);
+      GCanvas(const char* name, const char* title, Int_t wtopx, Int_t wtopy, Int_t ww, Int_t wh);
+      virtual ~GCanvas();
 
-        //void ProcessEvent(Int_t event,Int_t x,Int_t y,TObject *obj);
-        //void CatchEvent(Int_t event,Int_t x,Int_t y,TObject *obj);
+      //void ProcessEvent(Int_t event,Int_t x,Int_t y,TObject *obj);
+      //void CatchEvent(Int_t event,Int_t x,Int_t y,TObject *obj);
 
-        void HandleInput(EEventType event,Int_t x,Int_t y);
+      void HandleInput(Int_t event,Int_t x,Int_t y);
 
-        void Draw(Option_t *opt="");
+      void Draw(Option_t *opt="");
+
+      static GCanvas *MakeDefCanvas(); 
+
 
    private:
       void GCanvasInit();
@@ -32,6 +35,9 @@ class GCanvas : public TCanvas {
 
 
       void HandleKeyPress(int event,int x,int y,TObject *obj);
+      void HandleArrowKeyPress(Event_t *event,UInt_t *keysym);
+      void HandleKeyboardPress(Event_t *event,UInt_t *keysym);
+      void HandleMousePress(Int_t event,Int_t x,Int_t y);
 
       Window_t fCanvasWindowID;
       TRootCanvas *fRootCanvas;

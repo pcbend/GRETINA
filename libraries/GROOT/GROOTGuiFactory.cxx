@@ -31,6 +31,8 @@
 #include "TPluginManager.h"
 #include "TEnv.h"
 
+#include "GCanvas.h"
+
 ClassImp(GROOTGuiFactory)
 
 //______________________________________________________________________________
@@ -62,8 +64,8 @@ TCanvasImp *GROOTGuiFactory::CreateCanvasImp(TCanvas *c, const char *title,
    printf("Created a GRootCanvas.\n");
    //GRootCanvasManager::Instance()->AddCanvas(c);
    //return new GRootCanvas(c, title, width, height);i
-   GRootCanvas *grc = new GRootCanvas(c, title, width, height);
-   GRootCanvasManager::AddCanvas(c);
+   GRootCanvas *grc = new GRootCanvas((GCanvas*)c, title, width, height);
+   //GRootCanvasManager::AddCanvas(c);
    return grc;
 
 }
@@ -76,8 +78,8 @@ TCanvasImp *GROOTGuiFactory::CreateCanvasImp(TCanvas *c, const char *title,
    printf("Created a GRootCanvas.\n");
    //GRootCanvasManager::Instance()->AddCanvas(c);
    //return new GRootCanvas(c, title, x, y, width, height);
-   GRootCanvas *grc = new GRootCanvas(c, title, x, y, width, height);
-   GRootCanvasManager::AddCanvas(c);
+   GRootCanvas *grc = new GRootCanvas((GCanvas*)c, title, x, y, width, height);
+   //GRootCanvasManager::AddCanvas(c);
    return grc;
 }
 

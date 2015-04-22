@@ -392,6 +392,22 @@ bool TGRUTint::FileAutoDetect(std::string filename, long filesize) {
 }
 
 
+
+Long_t TGRUTint::ProcessLine(const char* line,Bool_t sync, Int_t *error) {
+  //printf("line = %s\n");
+  if(!strcmp(line,"TCanvas::MakeDefCanvas();"))
+     line = "GCanvas::MakeDefCanvas();";
+
+  return TRint::ProcessLine(line,sync,error);
+}
+
+
+
+
+
+
+
+
 bool TGRSIInterruptHandler::Notify() {
    printf("\n" DRED BG_WHITE  "   Control-c was pressed.   " RESET_COLOR "\n");
    abort();

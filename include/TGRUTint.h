@@ -37,6 +37,8 @@ class TGRUTint : public TRint {
 
       static TEnv *GetEnv() { return fGRSIEnv; }
 
+      Long_t ProcessLine(const char* line,Bool_t sync=kFALSE, Int_t *error=0);
+
    private:
       bool FileAutoDetect(std::string filename, long filesize);
       void InitFlags();

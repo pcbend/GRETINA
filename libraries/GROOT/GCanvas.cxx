@@ -11,15 +11,17 @@
 #include <KeySymbols.h> 
 #include <TVirtualX.h>
 #include <TROOT.h>
+#include <TFrame.h>
 
 #include "GCanvas.h"
 #include "GROOTGuiFactory.h"
 
-
 #include <iostream>
 
+#ifndef kArrowKeyPress
 #define kArrowKeyPress 25
 #define kArrowKeyRelease 26
+#endif
 
 int GCanvas::lastx = 0;
 int GCanvas::lasty = 0;
@@ -65,7 +67,7 @@ GCanvas::~GCanvas() {
 void GCanvas::GCanvasInit() {
    printf("GCanvasInit called.\n");
    // ok, to interact with the default TGWindow
-   // stuff from the root gui we need a out own GRootCanvas.  
+   // stuff from the root gui we need our own GRootCanvas.  
    // We make this using GROOTGuiFactory, which replaces the
    // TRootGuiFactory used in the creation of some of the 
    // default gui's (canvas,browser,etc).  
@@ -73,17 +75,30 @@ void GCanvas::GCanvasInit() {
    //if(gVirtualX->InheritsFrom("TGX11")) {
    //    printf("\tusing x11-like graphical interface.\n");
    //}
-   
-
-   this->SetCrosshair(true);
+   //this->SetCrosshair(true);
 }
 
+GCanvas *GCanvas::MakeDefCanvas() { 
 
+  // Static function to build a default canvas.
 
+  const char *defcanvas = gROOT->GetDefCanvasName();
+  char *cdef;
 
-
-
-
+  TList *lc = (TList*)gROOT->GetListOfCanvases();
+  if (lc->FindObject(defcanvas)) {
+    Int_t n = lc->GetSize() + 1;
+    cdef = new char[strlen(defcanvas)+15];
+    do {
+      strlcpy(cdef,Form("%s_n%d", defcanvas, n++),strlen(defcanvas)+15);
+    } while (lc->FindObject(cdef));
+  } else
+    cdef = StrDup(Form("%s",defcanvas));
+  GCanvas *c = new GCanvas(cdef, cdef, 1);
+  //printf("GCanvas::MakeDefCanvas"," created default GCanvas with name %s",cdef);
+  delete [] cdef;
+  return c;
+};
 
 //void GCanvas::ProcessEvent(Int_t event,Int_t x,Int_t y,TObject *obj) {
 //   printf("{GCanvas} ProcessEvent:\n");
@@ -98,8 +113,10 @@ void GCanvas::GCanvasInit() {
 //}
 
 
-void GCanvas::HandleInput(EEventType event,Int_t x,Int_t y) {
-   this->SetEditable(false);
+void GCanvas::HandleInput(Int_t event,Int_t x,Int_t y) {
+   if(GetSelected() && !strcmp(GetSelected()->GetName(),"TFrame"))
+     ((TFrame*)GetSelected())->SetBit(TBox::kCannotMove);
+//   this->SetEditable(false);
 //   printf(DRED);
 //   printf("{GCanvas} HandleEvent:\n");
 //   printf(DYELLOW "\tevent: \t0x%08x\n" DRED,event);
@@ -122,19 +139,23 @@ void GCanvas::HandleInput(EEventType event,Int_t x,Int_t y) {
 
 
 //   printf(RESET_COLOR);
+//  printf("I AM HERE!!!!!!!!!!\n");
   //If the below switch breaks. You need to upgrade your version of ROOT
   //Version 5.34.24 works.
   switch(event) {
-      case kArrowKeyPress:
+//      case kArrowKeyPress:
       //case kArrowKeyRelease:
-      case kKeyPress: 
-      //case kKeyRelease:
-         //this->SetEditable(true);
-         HandleKeyPress(event,x,y,this->GetSelected());
+     // case kKeyPress: 
+        //case kKeyRelease:
+        //this->SetEditable(true);
+     //   HandleKeyPress(event,x,y,this->GetSelected());
+     //   break;
+      case 0x00000001:
+         HandleMousePress(event,x,y);
          break;
-       default:
+      default:
          //printf(RED"\t\tHANDLE DEFAULT!" RESET_COLOR "\n");
-         TCanvas::HandleInput(event,x,y);
+         TCanvas::HandleInput((EEventType)event,x,y);
          //printf("Window_t = 0x%08x\n",gVirtualX->GetCurrentWindow());
          break;
    };
@@ -167,6 +188,8 @@ void GCanvas::UpdateStatsInfo(int x, int y) {
 }
 
 void GCanvas::HandleKeyPress(int event,int x,int key,TObject *obj) {
+
+   /*
    printf(DBLUE);
    //printf("\tevent  \t%i\n",this->GetEvent());
    std::cout << "\tevent  \t" << this->GetEvent() << "\n";
@@ -202,6 +225,7 @@ void GCanvas::HandleKeyPress(int event,int x,int key,TObject *obj) {
             printf("\tobj = %s\n",obj->GetName());
          break;
    };
+   */
 }
 
 void GCanvas::Draw(Option_t *opt) {
@@ -210,5 +234,125 @@ void GCanvas::Draw(Option_t *opt) {
    this->FindObject("TFrame")->SetBit(TBox::kCannotMove);
 }
 
+
+void GCanvas::HandleArrowKeyPress(Event_t *event,UInt_t *keysym) {
+
+  TIter iter(gPad->GetListOfPrimitives());
+  TH1 *hist = 0;
+  while(TObject *obj = iter.Next()) {
+     if( obj->InheritsFrom("TH1") &&
+        !obj->InheritsFrom("TH2") &&  
+        !obj->InheritsFrom("TH3") ) {  
+        hist = (TH1*)obj; 
+     }
+  }
+  if(!hist)
+     return;
+  int first = hist->GetXaxis()->GetFirst();
+  int last = hist->GetXaxis()->GetLast();
+ 
+  int min = std::min(first,0);
+  int max = std::max(last,hist->GetXaxis()->GetNbins()+1);
+
+
+  //printf("first = %i  |  last = %i\n", first,last);
+  //printf("min   = %i  |  max  = %i\n", min,max);
+
+  int xdiff = last-first;
+  int mdiff = max-min-2;
+  //if(xdiff==mdiff)
+  //   return;
+
+  switch (*keysym) {
+    case 0x1012: // left
+     {
+        if(mdiff>xdiff) {
+          if(first==(min+1)) {
+            //
+          }
+          else if((first-(xdiff/2))<min) {
+            first = min+1;
+            last  = min + (xdiff) + 1;
+            //last  = first-min-1 + (xdiff/2); 
+          } else {
+            first = first-(xdiff/2); 
+            last  = last -(xdiff/2);
+          }
+        }
+        hist->GetXaxis()->SetRange(first,last);
+        gPad->Modified();
+        gPad->Update();
+      }
+      //printf("LEFT\n");
+      break;
+    case 0x1013: // up
+      //printf("UP\n");
+      break;
+    case 0x1014: // right
+     {
+        //int xdiff = last-first;
+        //int mdiff = max-min;
+        if(mdiff>xdiff) {
+          if(last== (max-1)) {
+            // 
+          }else if((last+(xdiff/2))>max) {
+            first = max - 1 - (xdiff); 
+            last  = max - 1;
+          } else {
+            last  = last +(xdiff/2); 
+            first = first+(xdiff/2); 
+          }
+        }
+        hist->GetXaxis()->SetRange(first,last);
+        gPad->Modified();
+        gPad->Update();
+      }
+      //printf("RIGHT\n");
+      break;
+    case 0x1015: // down
+      //printf("DOWN\n");
+      break;
+    default:
+      printf("keysym = %i\n",*keysym);
+      break;
+  }
+
+
+}
+
+
+void GCanvas::HandleKeyboardPress(Event_t *event,UInt_t *keysym) {
+
+  printf("keysym = %i\n",*keysym);
+  TIter iter(gPad->GetListOfPrimitives());
+  TH1 *hist = 0;
+  bool edit = false;
+  while(TObject *obj = iter.Next()) {
+     if( obj->InheritsFrom("TH1") &&
+        !obj->InheritsFrom("TH2") &&  
+        !obj->InheritsFrom("TH3") ) {  
+        hist = (TH1*)obj; 
+     }
+  }
+  if(!hist)
+     return;
+  switch(*keysym) {
+    case kKey_o:
+      hist->GetXaxis()->UnZoom();
+      edit = true;    
+      break;
+  };
+  if(edit) {
+    gPad->Modified();
+    gPad->Update();
+  }
+  return;
+}
+
+
+void GCanvas::HandleMousePress(Int_t event,Int_t x,Int_t y) {
+  printf("Mouse clicked\n");
+  return;
+}
 
 

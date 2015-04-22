@@ -43,6 +43,7 @@ void GRootCanvasManager::AddCanvas(TCanvas *c) {
 }  
 
 void GRootCanvasManager::RemoveCanvas(TCanvas *c) {
+  /*
   //printf("c = 0x%08x\n",c); fflush(stdout);
   if(!c)
      return;
@@ -55,4 +56,5 @@ void GRootCanvasManager::RemoveCanvas(TCanvas *c) {
   } else {
      printf("Trying to remove canvas not in map...\n");
   }
+  */
 };
