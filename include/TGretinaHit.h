@@ -32,6 +32,15 @@ class TGretinaHit : public TObject {
        //return fInteractionPosition.at(fFirstInteraction);
        return fCorePosition;
     }
+ 
+    inline double GetPhi() { double phi = fCorePosition.Phi(); 
+                             if(phi<0) {phi = phi+TMath::TwoPi();} 
+                             if(phi>TMath::TwoPi()) { phi=phi-TMath::TwoPi(); }
+                             return phi; }
+    inline double GetTheta() { return fCorePosition.Theta(); }
+    inline double GetPhiDeg() { return GetPhi()*TMath::RadToDeg(); }
+    inline double GetThetaDeg() { return GetTheta()*TMath::RadToDeg(); }
+
 
     inline bool CheckPosition() { if(fInteractionPosition.size()>0) return true; return false; }
     bool CheckAddback(TGretinaHit&);

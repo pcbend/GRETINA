@@ -34,7 +34,7 @@ class TGretina : public TObject {
     std::vector<TGretinaHit> addback_hits;
     //std::vector<TGretinaHit> tracked_hits;
 
-    static Float_t crmat[31][4][4][4];
+    static Float_t crmat[32][4][4][4];
     static void SetCRMAT();
     static bool fCRMATSet;
 

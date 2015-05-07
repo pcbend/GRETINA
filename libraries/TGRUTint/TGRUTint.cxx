@@ -395,9 +395,15 @@ bool TGRUTint::FileAutoDetect(std::string filename, long filesize) {
 
 Long_t TGRUTint::ProcessLine(const char* line,Bool_t sync, Int_t *error) {
   //printf("line = %s\n");
-  if(!strcmp(line,"TCanvas::MakeDefCanvas();"))
-     line = "GCanvas::MakeDefCanvas();";
-
+  //if(!strcmp(line,"TCanvas::MakeDefCanvas();"))
+  //   line = "GCanvas::MakeDefCanvas();";
+  TString sline(line);
+  if(sline.Contains("TCanvas")) {
+    std::string s = line;
+    size_t f = s.find("TCanvas");
+    s.replace(f, std::string("TCanvas").length(), "GCanvas");
+    line = s.c_str();
+  }
   return TRint::ProcessLine(line,sync,error);
 }
 

@@ -14,7 +14,7 @@ Rint.TabComColor: magenta
 
 
 #default root variables form the grut enviorment
-Canvas.MoveOpaque: true
+#Canvas.MoveOpaque: true
 Canvas.ShowEventStatus: true
 #Canvas.ShowToolBar: true
 

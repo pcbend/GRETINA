@@ -12,11 +12,16 @@
 #include <TVirtualX.h>
 #include <TROOT.h>
 #include <TFrame.h>
+#include <TF1.h>
+#include <TGraph.h>
+
+#include <TContextMenu.h>
 
 #include "GCanvas.h"
 #include "GROOTGuiFactory.h"
 
 #include <iostream>
+#include <TMath.h>
 
 #ifndef kArrowKeyPress
 #define kArrowKeyPress 25
@@ -71,11 +76,46 @@ void GCanvas::GCanvasInit() {
    // We make this using GROOTGuiFactory, which replaces the
    // TRootGuiFactory used in the creation of some of the 
    // default gui's (canvas,browser,etc).  
+   fStatsDisplayed = true;
+   fMarkerMode     = false;
 
    //if(gVirtualX->InheritsFrom("TGX11")) {
    //    printf("\tusing x11-like graphical interface.\n");
    //}
    //this->SetCrosshair(true);
+}
+
+void GCanvas::AddMarker(int x,int y,int dim) {
+  GMarker *mark = new GMarker();
+  mark->x = x;
+  mark->y = y;
+  if(dim==1) {
+    mark->localx = gPad->AbsPixeltoX(x);
+    mark->linex = new TLine(mark->localx,GetUymin(),mark->localx,GetUymax());
+    mark->linex->SetLineColor(kRed);
+    mark->linex->Draw();
+  } else if (dim==2) {
+    mark->localx = gPad->AbsPixeltoX(x);
+    mark->localy = gPad->AbsPixeltoX(y);
+    mark->linex = new TLine(mark->localx,GetUymin(),mark->localx,GetUymax());
+    mark->linex->SetLineColor(kRed);
+    mark->liney = new TLine(GetUxmin(),mark->localy,GetUxmax(),mark->localy);
+    mark->liney->SetLineColor(kRed);
+    mark->linex->Draw();
+    mark->liney->Draw();
+  }
+  fMarkers.push_back(mark);
+  //printf("MarkerAdded %i | %i",x,y);
+}
+
+void GCanvas::RemoveMarker() {
+  if(fMarkers.size()<1)
+    return;
+  if(fMarkers.at(0))
+     delete fMarkers.at(0);
+  //printf("Marker %i Removed\n");
+  fMarkers.erase(fMarkers.begin());
+  return;
 }
 
 GCanvas *GCanvas::MakeDefCanvas() { 
@@ -114,57 +154,25 @@ GCanvas *GCanvas::MakeDefCanvas() {
 
 
 void GCanvas::HandleInput(Int_t event,Int_t x,Int_t y) {
-   if(GetSelected() && !strcmp(GetSelected()->GetName(),"TFrame"))
-     ((TFrame*)GetSelected())->SetBit(TBox::kCannotMove);
-//   this->SetEditable(false);
-//   printf(DRED);
-//   printf("{GCanvas} HandleEvent:\n");
-//   printf(DYELLOW "\tevent: \t0x%08x\n" DRED,event);
-//   if(this->GetSelected())
-//      printf("\tfselected found[0x%08x]\t %s\n",this->GetSelected(),this->GetSelected()->GetName());
-//   printf(DBLUE);
-   //Event_t ev;
-   //int px,py;
-   //printf("CheckEvent = %i\n",gVirtualX->CheckEvent(fCanvasWindowID,(EGEventType)event,ev));
-   //printf("CheckEvent = %i\n",gVirtualX->CheckEvent(gVirtualX->GetCurrentWindow(),(EGEventType)event,ev));
-
-   //gVirtualX->SelectWindow(this->GetCanvasID());
-   //int myevent = gVirtualX->RequestLocator(1, 1, px, py);
-
-   //printf("CheckEvent = %i\n",gVirtualX->CheckEvent(gVirtualX->GetDefaultRootWindow(),(EGEventType)event,ev));
-   //printf("Events pending = %i\n",gVirtualX->EventsPending());
-
-   //gVirtualX->NextEvent(ev);
-   //printf("Event from request: %08x\n",&myevent);
-
-
-//   printf(RESET_COLOR);
-//  printf("I AM HERE!!!!!!!!!!\n");
   //If the below switch breaks. You need to upgrade your version of ROOT
   //Version 5.34.24 works.
-  switch(event) {
-//      case kArrowKeyPress:
-      //case kArrowKeyRelease:
-     // case kKeyPress: 
-        //case kKeyRelease:
-        //this->SetEditable(true);
-     //   HandleKeyPress(event,x,y,this->GetSelected());
-     //   break;
-      case 0x00000001:
-         HandleMousePress(event,x,y);
-         break;
-      default:
-         //printf(RED"\t\tHANDLE DEFAULT!" RESET_COLOR "\n");
-         TCanvas::HandleInput((EEventType)event,x,y);
-         //printf("Window_t = 0x%08x\n",gVirtualX->GetCurrentWindow());
-         break;
-   };
 
-   
-   //TCanvas::ProcessedEvent(event,x,y,this->GetSelected());
-   //this->SetEditable(fal);
-   this->SetEditable(true);
-   return;
+  //if(this->GetPadSave()!=gPad)
+  //   gPad = this->GetPadSave();
+
+
+  bool used = false;
+  switch(event) {
+    case 0x00000001:
+      used = HandleMousePress(event,x,y);
+      break;
+  };
+  if(!used)
+    TCanvas::HandleInput((EEventType)event,x,y);
+  
+
+
+  return;
 }
 
 
@@ -187,46 +195,9 @@ void GCanvas::UpdateStatsInfo(int x, int y) {
    }
 }
 
-void GCanvas::HandleKeyPress(int event,int x,int key,TObject *obj) {
-
-   /*
-   printf(DBLUE);
-   //printf("\tevent  \t%i\n",this->GetEvent());
-   std::cout << "\tevent  \t" << this->GetEvent() << "\n";
-   printf("\tfsel:  \t%s\n",this->GetSelected()->GetName());
-   printf("\tx:     \t%i\n",x);
-   printf("\tkey:   \t%i\n",key);
-
-   printf("\t\tGetEvent:    \t%i\n",this->GetEvent());
-   printf("\t\tGetEventX:   \t%i\n",this->GetEventX());
-   printf("\t\tGetEventY:   \t%i\n",this->GetEventY());
-
-
-   printf(RESET_COLOR);
-   switch(key) {
-      case kKey_Up:
-         printf("UP!\n");    
-         if(obj)
-            printf("\tobj = %s\n",obj->GetName());
-         break;
-      case kKey_Down:
-         printf("DOWN!\n");         
-         if(obj)
-            printf("\tobj = %s\n",obj->GetName());
-         break;
-      case kKey_Right:
-         printf("RIGHT!\n");         
-         if(obj)
-            printf("\tobj = %s\n",obj->GetName());
-         break;
-      case kKey_Left:
-         printf("LEFT!\n");         
-         if(obj)
-            printf("\tobj = %s\n",obj->GetName());
-         break;
-   };
-   */
-}
+//void GCanvas::HandleKeyPress(int event,int x,int key,TObject *obj) {
+//
+//}
 
 void GCanvas::Draw(Option_t *opt) {
    printf("GCanvas Draw was called.\n");
@@ -235,7 +206,7 @@ void GCanvas::Draw(Option_t *opt) {
 }
 
 
-void GCanvas::HandleArrowKeyPress(Event_t *event,UInt_t *keysym) {
+bool GCanvas::HandleArrowKeyPress(Event_t *event,UInt_t *keysym) {
 
   TIter iter(gPad->GetListOfPrimitives());
   TH1 *hist = 0;
@@ -247,7 +218,7 @@ void GCanvas::HandleArrowKeyPress(Event_t *event,UInt_t *keysym) {
      }
   }
   if(!hist)
-     return;
+     return false;
   int first = hist->GetXaxis()->GetFirst();
   int last = hist->GetXaxis()->GetLast();
  
@@ -316,14 +287,111 @@ void GCanvas::HandleArrowKeyPress(Event_t *event,UInt_t *keysym) {
       printf("keysym = %i\n",*keysym);
       break;
   }
-
+  return true;
 
 }
 
 
-void GCanvas::HandleKeyboardPress(Event_t *event,UInt_t *keysym) {
+bool GCanvas::HandleKeyboardPress(Event_t *event,UInt_t *keysym) {
 
-  printf("keysym = %i\n",*keysym);
+  //printf("keysym = %i\n",*keysym);
+  TIter iter(gPad->GetListOfPrimitives());
+  TH1 *hist = 0;
+  bool edit = false;
+  while(TObject *obj = iter.Next()) {
+     if( obj->InheritsFrom("TH1") &&
+        !obj->InheritsFrom("TH2") &&  
+        !obj->InheritsFrom("TH3") ) {  
+        hist = (TH1*)obj; 
+     }
+  }
+
+  if(!hist)
+     return false;
+
+
+  switch(*keysym) {
+    case kKey_b:
+      edit = SetLinearBG();
+      break;
+    case kKey_E:
+      GetContextMenu()->Action(hist->GetXaxis(),hist->GetXaxis()->Class()->GetMethodAny("SetRangeUser"));
+      edit = true;
+      break;
+    case kKey_e:
+      if(GetNMarkers()<2)
+         break;
+      if(fMarkers.at(fMarkers.size()-1)->localx < fMarkers.at(fMarkers.size()-2)->localx) 
+        hist->GetXaxis()->SetRangeUser(fMarkers.at(fMarkers.size()-1)->localx,fMarkers.at(fMarkers.size()-2)->localx);
+      else
+        hist->GetXaxis()->SetRangeUser(fMarkers.at(fMarkers.size()-2)->localx,fMarkers.at(fMarkers.size()-1)->localx);
+      edit = true;
+      while(GetNMarkers())
+         RemoveMarker();
+      break;
+    case kKey_g:
+      edit = GausFit();
+      break;
+    case kKey_G:
+      edit = GausBGFit();
+      break;
+    case kKey_m:
+      SetMarkerMode(true);
+      break;
+    case kKey_M:
+      SetMarkerMode(false);
+    case kKey_n: 
+      while(GetNMarkers())
+         RemoveMarker();
+      hist->GetListOfFunctions()->Delete();
+      edit = true;
+      break;  
+    case kKey_o:
+      hist->GetXaxis()->UnZoom();
+      edit = true;    
+      while(GetNMarkers())
+         RemoveMarker();
+      break;
+    case kKey_S:
+      if(fStatsDisplayed)
+         fStatsDisplayed = false;
+      else
+         fStatsDisplayed = true;
+      hist->SetStats(fStatsDisplayed);
+      edit = true;
+      break;
+  };
+  if(edit) {
+    gPad->Modified();
+    gPad->Update();
+  }
+  return true;
+}
+
+
+bool GCanvas::HandleMousePress(Int_t event,Int_t x,Int_t y) {
+  //printf("Mouse clicked  %i   %i\n",x,y);
+  if(!GetSelected())
+    return false;
+  //printf("GetSeleteced()->GetName() = %s\n",GetSelected()->GetName());
+  //printf("GetSeleteced()->IsA() = %s\n",GetSelected()->IsA()->GetName());
+  if(GetSelected()->InheritsFrom("TCanvas"))
+     ((TCanvas*)GetSelected())->cd();
+
+
+  //printf("GetSeleteced()->GetName() = %s\n",GetSelected()->GetName());
+   
+//    printf("GetSeleteced()->GetParenet()->GetName() = %s\n",GetSelected()->GetParent()->GetName());
+//  printf("gPad                        = 0x%08x \n",gPad);
+//  printf("this->GetClickSelectedPad() = 0x%08x \n",this->GetClickSelectedPad());
+
+
+//  TPad *pad = Pick(x, y, 0);
+//  if (!pad) return false;
+//  pad->cd();
+//  gROOT->SetSelectedPad(pad);
+
+
   TIter iter(gPad->GetListOfPrimitives());
   TH1 *hist = 0;
   bool edit = false;
@@ -335,24 +403,212 @@ void GCanvas::HandleKeyboardPress(Event_t *event,UInt_t *keysym) {
      }
   }
   if(!hist)
-     return;
-  switch(*keysym) {
-    case kKey_o:
-      hist->GetXaxis()->UnZoom();
-      edit = true;    
-      break;
-  };
-  if(edit) {
+     return false;
+
+  bool used = false;
+
+  if(!strcmp(gPad->GetSelected()->GetName(),"TFrame") && fMarkerMode) {
+   ((TFrame*)gPad->GetSelected())->SetBit(TBox::kCannotMove);
+    if(((GCanvas*)gPad->GetCanvas())->GetNMarkers()==4)
+       ((GCanvas*)gPad->GetCanvas())->RemoveMarker();
+    ((GCanvas*)gPad->GetCanvas())->AddMarker(x,y);
+    //int px = gPad->AbsPixeltoX(x);
+    //TLine *line = new TLine(px,GetUymin(),px,GetUymax());
+    //line->Draw();
+    used = true;
+  }
+
+  if(used) {
     gPad->Modified();
     gPad->Update();
   }
-  return;
+  return used;
 }
 
-
-void GCanvas::HandleMousePress(Int_t event,Int_t x,Int_t y) {
-  printf("Mouse clicked\n");
-  return;
+bool GCanvas::SetLinearBG(GMarker *m1,GMarker *m2) {
+  TIter iter(gPad->GetListOfPrimitives());
+  TH1 *hist = 0;
+  bool edit = false;
+  while(TObject *obj = iter.Next()) {
+     if( obj->InheritsFrom("TH1") &&
+        !obj->InheritsFrom("TH2") &&  
+        !obj->InheritsFrom("TH3") ) {  
+        hist = (TH1*)obj; 
+     }
+  }
+  if(!hist)
+     return false;
+  if(!m1 || !m2) {
+    if(GetNMarkers()<2) {
+       return false;
+    } else { 
+       m1 = fMarkers.at(fMarkers.size()-1);
+       m2 = fMarkers.at(fMarkers.size()-2);
+    }
+  }
+  TF1 *bg = hist->GetFunction("linbg");
+  if(bg)
+     bg->Delete();
+  double x[2];
+  double y[2];
+  if(m1->localx < m2->localx) {
+    x[0]=m1->localx; x[1]=m2->localx;
+    y[0]=hist->GetBinContent(m1->x); y[1]=hist->GetBinContent(m2->x); 
+  } else {
+    x[1]=m1->localx; x[0]=m2->localx;
+    y[1]=hist->GetBinContent(m1->x); y[2]=hist->GetBinContent(m2->x); 
+  }
+  printf("x[0] = %.02f   x[1] = %.02f\n",x[0],x[1]);
+  bg = new TF1("linbg","pol1",x[0],x[1]);
+  hist->Fit(bg,"QR+");
+  bg->SetRange(gPad->GetUxmin(),gPad->GetUxmax());
+  hist->GetListOfFunctions()->Add(bg);
+  bg->Draw("same");
+  //hist->GetListOfFunctions()->Add(bg);
+  //bg->Draw("same");
+  return true;
 }
 
+bool GCanvas::GausBGFit(GMarker *m1,GMarker *m2) {
+  TIter iter(gPad->GetListOfPrimitives());
+  TH1 *hist = 0;
+  bool edit = false;
+  while(TObject *obj = iter.Next()) {
+     if( obj->InheritsFrom("TH1") &&
+        !obj->InheritsFrom("TH2") &&  
+        !obj->InheritsFrom("TH3") ) {  
+        hist = (TH1*)obj; 
+     }
+  }
+  if(!hist)
+     return false;
+  if(!m1 || !m2) {
+    if(GetNMarkers()<2) {
+       return false;
+    } else { 
+       m1 = fMarkers.at(fMarkers.size()-1);
+       m2 = fMarkers.at(fMarkers.size()-2);
+    }
+  }
+  
+  TF1 *gausfit = hist->GetFunction("gausfit");
+  if(gausfit)
+     gausfit->Delete();
+  int binx[2];
+  double x[2];
+  double y[2];
+  if(m1->localx < m2->localx) {
+    x[0]=m1->localx; x[1]=m2->localx;
+    binx[0]=m1->x;   binx[1]=m2->x;
+    y[0]=hist->GetBinContent(m1->x); y[1]=hist->GetBinContent(m2->x); 
+  } else {
+    x[1]=m1->localx; x[0]=m2->localx;
+    binx[1]=m1->x;   binx[0]=m2->x;
+    y[1]=hist->GetBinContent(m1->x); y[0]=hist->GetBinContent(m2->x); 
+  }
+  //printf("x[0] = %.02f   x[1] = %.02f\n",x[0],x[1]);
+  gausfit = new TF1("gausfit","pol1(0)+gaus(2)",x[0],x[1]);
+  TF1 *gfit = new TF1("gaus","gaus",x[0],x[1]);
+  hist->Fit(gfit,"QR+");
 
+  gausfit->SetParameters(y[0],0,gfit->GetParameter(0),gfit->GetParameter(1),gfit->GetParameter(2));
+  
+  gfit->Delete();
+  hist->GetFunction("gaus")->Delete();
+
+  hist->Fit(gausfit,"QR+");
+  TF1 *bg = new TF1("bg","pol1",x[0],x[1]);
+  bg->SetParameters(gausfit->GetParameter(0),gausfit->GetParameter(1));
+  bg->Draw("same");
+  hist->GetListOfFunctions()->Add(bg);
+  
+  double param[5];
+  double error[5];
+   
+  gausfit->GetParameters(param);
+  error[0] = gausfit->GetParError(0);
+  error[1] = gausfit->GetParError(1);
+  error[2] = gausfit->GetParError(2);
+  error[3] = gausfit->GetParError(3);
+  error[4] = gausfit->GetParError(4);
+  
+  printf("\nIntegral from % 4.01f to % 4.01f: %f\n",x[0],x[1],gausfit->Integral(x[0],x[1])/hist->GetBinWidth(1));
+  printf("Centroid:  % 4.02f  +/- %.02f\n",param[3],error[3]);
+  printf("FWHM:      % 4.02f  +/- %.02f\n",fabs(param[4]*2.35),error[4]*2.35);
+  double integral = gausfit->Integral(x[0],x[1])/hist->GetBinWidth(1);
+  double int_err  = integral*TMath::Sqrt(((error[2]/param[2])*(error[2]/param[2]))+
+                                         ((error[4]/param[4])*(error[4]/param[4])));
+  printf("Area:      % 4.02f  +/- %.02f\n",
+         integral - (bg->Integral(x[0],x[1])/hist->GetBinWidth(1)),int_err);
+  return true;
+  
+}
+
+bool GCanvas::GausFit(GMarker *m1,GMarker *m2) {
+  TIter iter(gPad->GetListOfPrimitives());
+  TH1 *hist = 0;
+  bool edit = false;
+  while(TObject *obj = iter.Next()) {
+     if( obj->InheritsFrom("TH1") &&
+        !obj->InheritsFrom("TH2") &&  
+        !obj->InheritsFrom("TH3") ) {  
+        hist = (TH1*)obj; 
+     }
+  }
+  if(!hist)
+     return false;
+  if(!m1 || !m2) {
+    if(GetNMarkers()<2) {
+       return false;
+    } else { 
+       m1 = fMarkers.at(fMarkers.size()-1);
+       m2 = fMarkers.at(fMarkers.size()-2);
+    }
+  }
+  
+  TF1 *gausfit = hist->GetFunction("gausfit");
+  if(gausfit)
+     gausfit->Delete();
+  int binx[2];
+  double x[2];
+  double y[2];
+  if(m1->localx < m2->localx) {
+    x[0]=m1->localx; x[1]=m2->localx;
+    binx[0]=m1->x;   binx[1]=m2->x;
+    y[0]=hist->GetBinContent(m1->x); y[1]=hist->GetBinContent(m2->x); 
+  } else {
+    x[1]=m1->localx; x[0]=m2->localx;
+    binx[1]=m1->x;   binx[0]=m2->x;
+    y[1]=hist->GetBinContent(m1->x); y[0]=hist->GetBinContent(m2->x); 
+  }
+  //printf("x[0] = %.02f   x[1] = %.02f\n",x[0],x[1]);
+  gausfit = new TF1("gausfit","gaus",x[0],x[1]);
+//  TF1 *gfit = new TF1("gaus","gaus",x[0],x[1]);
+//  hist->Fit(gfit,"QR+");
+
+  ///gausfit->SetParameters(y[0],0,gfit->GetParameter(0),gfit->GetParameter(1),gfit->GetParameter(2));
+  
+//  gfit->Delete();
+  //hist->GetFunction("gaus")->Delete();
+
+  hist->Fit(gausfit,"QR+");
+  
+  double param[3];
+  double error[3];
+   
+  gausfit->GetParameters(param);
+  error[0] = gausfit->GetParError(0);
+  error[1] = gausfit->GetParError(1);
+  error[2] = gausfit->GetParError(2);
+  
+  printf("\nIntegral from % 4.01f to % 4.01f: %f\n",x[0],x[1],gausfit->Integral(x[0],x[1])/hist->GetBinWidth(1));
+  printf("Centroid:  % 4.02f  +/- %.02f\n",param[1],error[1]);
+  printf("FWHM:      % 4.02f  +/- %.02f\n",param[2]*2.35,error[2]*2.35);
+  double integral = gausfit->Integral(x[0],x[1])/hist->GetBinWidth(1);
+  double int_err  = integral*TMath::Sqrt((error[0]/param[0])*(error[0]/param[0]) +
+                                         ((error[2]/param[2])*(error[2]/param[2])));
+  printf("Area:      % 4.02f  +/- %.02f\n",
+         integral,int_err);
+  return true;
+  
+}
