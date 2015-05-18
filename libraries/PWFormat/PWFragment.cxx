@@ -16,7 +16,7 @@ PWFragment::~PWFragment() { }
 
 void PWFragment::Copy(const PWFragment &rhs) {
 
-  Clear();  
+  //Clear();  
   fNumberHits      =  rhs.fNumberHits;      
   fSegments        =  rhs.fSegments;
 

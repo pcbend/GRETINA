@@ -26,6 +26,7 @@ std::map<int,std::pair<float,float> > TPhosWall::fBMap;
 std::map<int,std::pair<float,float> > TPhosWall::fCMap;
 
 
+std::map<int,int> TPhosWall::fBDiffMap;
 
 
 
@@ -43,7 +44,8 @@ TPhosWall::~TPhosWall() {  }
 void TPhosWall::AddPWHit(PWFragment &frag) {
    Clear();
    fTimeStamp  = frag.GetTimeStamp();
-   fLargestHit = frag.GetLargestNumber();
+   Int_t fLargestValue = 0;
+   fLargestHit = 0; //frag.GetLargestNumber();
 
    for(unsigned int x=0;x<frag.GetNumberOfHits();x++) {
 
@@ -59,8 +61,26 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
       }
       else
          fPosition.push_back(frag.GetSegment(x).Position());
+      if(BDiffCal(x)>fLargestValue)
+         fLargestHit=x;
+
    }
 }
+
+/*
+const Int_t TPhosWall::GetLargestNumber() {
+  Int_t temp_largestvalue=0;
+  Int_t largest_x = 0;
+  for(int x=0;x<Size();x++) {
+    if(BDiffCal(x)>temp_largestvalue)
+       largest_x = x;
+       //fLargestHit=x;
+  }
+  //printf("largest number = %i\n");
+  return largest_x; //fLargestHit;
+}
+*/
+
 
 void TPhosWall::FindWeightedPosition() {
   if(fACharge.size()<=fLargestHit)
@@ -111,13 +131,15 @@ void TPhosWall::Print(Option_t *opt) {
   for(int i=0;i<fPosition.size();i++) {
     if(i==fLargestHit) {
        printf(DGREEN);
-       printf("Mag: %.02f\tAChg = %i\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),fACharge.at(i));
-       printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
+       printf("[%02i][%03i]  \t",i,fPixel.at(i)); //fPosition.at(i).Print();
+       printf("Mag: %.02f\tAChg = %i\t|\tBChg = %i\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),
+       fACharge.at(i),fBCharge.at(i));
        printf(RESET_COLOR);
        continue;
     }
-    printf("Mag: %.02f\tAChg = %i\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),fACharge.at(i));
-    printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
+    printf("[%02i][%03i]  \t",i,fPixel.at(i)); //fPosition.at(i).Print();
+    printf("Mag: %.02f\tAChg = %i\t|\tBChg = %i\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),
+    fACharge.at(i),fBCharge.at(i));
   }
   printf(DYELLOW);
   printf("\t[%02i]",fMultiplicity);fWeightedPosition.Print();
@@ -333,27 +355,32 @@ TVector3 TPhosWall::GetWallPosition(int pixelnumber,double delta) {
    //int y = abs((pixel%8)-7);  
 //   int y = (pixel/8);
 
-   int x,y;
+   int x,y;  //1 to 8!!
    switch(det) {
       case 0:
          x = (pixel%8);
          y = (pixel/8);
+         //delta = (double)y*2.5;
          break;
       case 1:
-         x = (pixel/8);
+         x = (pixel/8) + 1;
          y = abs((pixel%8)-7);
+         //delta = (double)x*2.5;
          break;
       case 2:
          x = abs((pixel%8)-7);
          y = abs((pixel/8)-7);
+         //delta = (double)y*2.5;
          break;
       case 3:
          x = abs((pixel/8)-7);
-         y = (pixel&8); 
+         y = (pixel&8) + 1; 
+         //delta = (double)x*2.5;
          break;
    }
-   double localx = ((double(x)+1.0)*0.17) + ((double(x)+0.5)*6.08);
-   double localy = ((double(y)+1.0)*0.17) + ((double(y)+0.5)*6.08);
+   x++; y++;
+   double localx = ((double(x)-4.5)*6.08);  
+   double localy = ((double(y)-4.5)*6.08);  
 
    double globalx = (L/2.0) - localx + delta;
    double globaly = Ro*TMath::Sin(Psi) - ((L/2.0)-localy)*TMath::Cos(Psi) - delta;
@@ -379,7 +406,7 @@ TVector3 TPhosWall::GetWallPosition(int pixelnumber,double delta) {
    };
 */
    position.SetXYZ(globalx,globaly,globalz);
-   position.RotateZ(((double)det)*TMath::PiOver2());
+   position.RotateZ(((double)(det))*TMath::PiOver2());
    //position.SetPhi(position.Phi()+(double)det*TMath::PiOver2());
 
    return position;
@@ -487,6 +514,9 @@ void TPhosWall::SetCalMaps() {
   fMapCfile.append("/libraries/TPhosWall/Ccoeff.cal");//-322-8x8.xy");
   //printf("fMapAfile = %s\n",fMapAfile.c_str());
 
+  std::string fMapBDiffFile = getenv("GEBSYS");
+  fMapBDiffFile.append("/libraries/TPhosWall/BDiffcoeff.cal");//-322-8x8.xy");
+
   std::string line;
   std::ifstream infile;
   infile.open(fMapAfile.c_str());
@@ -514,6 +544,22 @@ void TPhosWall::SetCalMaps() {
     //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
   }
 
+
+  infile.close();
+  infile.open(fMapBDiffFile.c_str());
+  while(getline(infile,line)) {
+    //if(line.length()<10) 
+    //   continue;
+    std::stringstream ss(line);
+    ss >> pixel; ss >> junk;
+    //ss >> offset; ss >> gain;
+    fBDiffMap[pixel] = junk; //std::make_pair(offset,gain);
+    //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
+  }
+
+
+
+
   infile.close();
   infile.open(fMapCfile.c_str());
   while(getline(infile,line)) {
@@ -525,6 +571,10 @@ void TPhosWall::SetCalMaps() {
     fCMap[pixel] = std::make_pair(offset,gain);
     //printf("%i\t%i\t%.02f\t%f\n",junk,pixel,offset,gain);
   }
+
+
+
+
 
   //printf("fAMap.size() = %i\n",fAMap.size());
 
@@ -571,6 +621,28 @@ Float_t TPhosWall::GetBCal() {
    tmp = tmp* std::get<1>(fBMap[GetPixel()]) + std::get<0>(fBMap[GetPixel()]);
    return tmp;
 }
+
+
+Int_t TPhosWall::BDiffCal(const int &i) {
+   if(i>=fTime.size()) { 
+      //printf("fLargetHit = %i fTime.size() = %i\n",fLargestHit,fTime.size());
+      return 0; 
+   }
+   if(!fCalMapsSet) {
+      //printf("cal maps not yet set!!\n");
+      return 0;
+   }
+   //float tmp = (Float_t)fBCharge.at(fLargestHit) + gRandom->Uniform(); 
+   if(fBDiffMap[Pixel(i)]==0)
+      return 0;
+   return fBDiffMap[Pixel(i)] + B(i);
+}
+
+
+
+
+
+
 
 Float_t TPhosWall::BCal(const int &i) {
    if(fLargestHit>=fTime.size()) 
