@@ -110,7 +110,10 @@ void G2Fragment::Clear(Option_t *opt) {
   fSegments.clear();
 }
 
-void G2Fragment::Print(Option_t *opt) { }
+void G2Fragment::Print(Option_t *opt) const {
+  //std::cout << *this; 
+  return;
+}
 
 
 

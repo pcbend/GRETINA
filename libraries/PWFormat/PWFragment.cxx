@@ -32,12 +32,12 @@ void PWFragment::Copy(const TGEBEvent::TPWBank &rhs) {
 }
 
 void PWFragment::Copy(const TGEBEvent &event) {
-  int a=0;
+  int b=0;
   fTimeStamp = event.GetTimeStamp();
   for(int x=0;x<event.GetDataSize();x+=sizeof(TGEBEvent::TPWHit)) {
     PWSegment seg = (*((TGEBEvent::TPWHit*)(event.GetData()+x)));
-    if(seg.A()>a) {
-      a = seg.A();
+    if(seg.B()>b) {
+      b = seg.B();
       fLargestHit = x/sizeof(TGEBEvent::TPWHit);
     }
     fSegments.push_back(seg);

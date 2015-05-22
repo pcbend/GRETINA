@@ -28,7 +28,7 @@ class G2Fragment : public TObject {
     void Copy(const TGEBEvent&);  
 
     void Clear(Option_t *opt ="");
-    void Print(Option_t *opt ="");
+    void Print(Option_t *opt ="") const;
 
       
     const inline Int_t   &GetCrystalNumber()          { return fCrystal; }

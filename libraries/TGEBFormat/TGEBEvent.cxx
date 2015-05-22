@@ -21,6 +21,7 @@ TGEBEvent::TGEBEvent() {
 }
 
 void TGEBEvent::Copy(const TGEBEvent &rhs) {
+
   fEventHeader = rhs.fEventHeader;
 
   fData = (char*)malloc(fEventHeader.size);
@@ -36,6 +37,8 @@ TGEBEvent::TGEBEvent(const TGEBEvent &rhs) {
 TGEBEvent::~TGEBEvent() { 
   Clear();
 }
+
+Int_t TGEBEvent::Compare(const TGEBEvent &rhs) const { }
 
 TGEBEvent &TGEBEvent::operator=(const TGEBEvent &rhs) {
   if(&rhs!=this)
@@ -93,7 +96,7 @@ bool TGEBEvent::IsGoodSize() const {
 }
 
 
-void TGEBEvent::Print(Option_t *opt) { }
+void TGEBEvent::Print(Option_t *opt) const { }
 
 
 void TGEBEvent::AllocateData()  const {

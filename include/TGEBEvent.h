@@ -23,11 +23,12 @@ class TGEBEvent : public TObject {
     TGEBEvent(const TGEBEvent&);
     ~TGEBEvent();
     TGEBEvent& operator=(const TGEBEvent &);
-    void Copy(const TGEBEvent&);
-    void Clear(Option_t *opt ="");
-    void Print(Option_t *opt ="");
-
-
+   
+    void  Clear(Option_t *opt ="");
+    Int_t Compare(const TGEBEvent&) const;
+    void  Copy(const TGEBEvent&)    ;
+    void  Print(Option_t *opt ="")  const;
+    
 
 
     TGEBEventHeader *GetEventHeader();
