@@ -1,4 +1,5 @@
-#ifndef TGRETINA_H 
+#ifndef TPHOSWALL_H 
+#define TPHOSWALL_H 
 
 #include <TObject.h>
 #include <TVector3.h>

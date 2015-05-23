@@ -64,6 +64,25 @@ std::ostream& operator<<(std::ostream& os,const TGEBEvent::TPWBank &bank) {
 };
 
 
+std::ostream& operator<<(std::ostream& os,const TGEBEvent::TLaBrSeg &hit) {
+   return os << "LaBrHit[" << std::setw(2)  << hit.chan_id <<"]\t"   //  PW Bank @ " << std::hex << &head << std::dec      << std::endl
+             << std::setw(8) << hit.value << std::endl;	
+};
+
+
+std::ostream& operator<<(std::ostream& os,const TGEBEvent::TLaBrBank &bank) {
+   //os << std::setw(24) << "data_a" << std::setw(8) << "data_b" << std::setw(8) << "data_c" << std::setw(8) << "time" << std::endl;
+   //os << " size in bytes = " << sizeof(this) << endl;
+   os << "LaBr Bank: \n";
+   os << "Energy Hits: " << bank.nenghits << std::endl;
+   for(int x=0;x<bank.nenghits;x++)
+      os << "\t" << bank.energy_hit[x];
+   os << "Time Hits: " << bank.ntimhits << std::endl;
+   for(int x=0;x<bank.ntimhits;x++)
+      os << "\t" << bank.energy_hit[x];
+   os << "*****************************" << std::endl;
+   return os;
+};
 
 
 

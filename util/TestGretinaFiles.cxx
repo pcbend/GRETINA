@@ -14,6 +14,8 @@
 #include <TGretina.h>
 #include <TPhosWall.h>
 
+#include <LaBrFragment.h>
+
 #include <TFile.h>
 #include <TTree.h>
 
@@ -60,6 +62,7 @@ int main(int argc, char **argv) {
 
   int phoscounter = 0;
   int gretcounter = 0;
+  int labrcounter = 0;
 
   if(outfilename.length()==0) {
      printf("\tno outfile file specified, using default: myoutput.root\n");
@@ -103,11 +106,12 @@ int main(int argc, char **argv) {
       //phoswall->Clear();
     }
 
+    //event->Print();
 
     switch(event->GetEventType()) {
       case 1: {
        //printf("\tfound gretina bank 1\n");
-       std::cout << *((TGEBEvent::TGEBBankType1*)event->GetData());
+//       std::cout << *((TGEBEvent::TGEBBankType1*)event->GetData());
         //G2Fragment frag(*event);
         //frag.Print();
 
@@ -119,12 +123,19 @@ int main(int argc, char **argv) {
       case 17: {
         PWFragment frag(*event);
        
-        frag.Print();
+//        frag.Print();
 
         //phoswall->AddPWHit(frag);
         phoscounter++;
       }
       break;
+      case 18: 
+        event->Print();
+        {   
+          LaBrFragment frag(event);     
+        }
+        labrcounter++;
+        break;
     };  
 
     LastTime = event->GetTimeStamp();

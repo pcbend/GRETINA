@@ -96,7 +96,17 @@ bool TGEBEvent::IsGoodSize() const {
 }
 
 
-void TGEBEvent::Print(Option_t *opt) const { }
+void TGEBEvent::Print(Option_t *opt) const {
+  std::cout << fEventHeader;
+  printf("\t");
+  for(int x=0;x<GetDataSize();x+=4) {
+    printf("0x%08x  ",*(((int*)GetData())+x));
+    if((((x+1)%8)==0) && ((x+1)!=GetDataSize()))
+      printf("\n\t");
+    
+  }
+  printf("\n--------------------------\n");
+}
 
 
 void TGEBEvent::AllocateData()  const {

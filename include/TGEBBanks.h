@@ -12,7 +12,7 @@
 
 #define MAX_INTPTS 16
 #define MAX_PWID   256
-
+#define MAX_LABRID 16
 
 
 typedef struct { // HPGe Segment Hit Type 1;
@@ -72,9 +72,21 @@ typedef struct{
 friend std::ostream& operator<<(std::ostream& os,const TGEBEvent::TPWBank &bank);
 
 
+typedef struct {
+  Short_t chan_id;   //int16_t
+  Short_t value;     //int16_t
+}__attribute__((__packed__)) TLaBrSeg;
 
+friend std::ostream& operator<<(std::ostream& os,const TGEBEvent::TLaBrSeg &hit);
 
+typedef struct {
+  Short_t nenghits;
+  Short_t ntimhits;
+  TLaBrSeg energy_hit[MAX_LABRID];
+  TLaBrSeg time_hit[MAX_LABRID];
+}__attribute__((__packed__)) TLaBrBank;
 
+friend std::ostream& operator<<(std::ostream& os,const TGEBEvent::TLaBrBank &bank);
 
 
 #endif

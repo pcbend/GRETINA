@@ -13,6 +13,8 @@
 
 #include <TGretina.h>
 #include <TPhosWall.h>
+#include <TLaBr.h>
+#include <LaBrFragment.h>
 
 #include <TFile.h>
 #include <TTree.h>
@@ -57,9 +59,11 @@ int main(int argc, char **argv) {
 
   TGretina  *gretina  = new TGretina;
   TPhosWall *phoswall = new TPhosWall;
+  TLaBr     *labr     = new TLaBr;
 
   int phoscounter = 0;
   int gretcounter = 0;
+  int labrcounter = 0;
 
   if(outfilename.length()==0) {
      printf("\tno outfile file specified, using default: myoutput.root\n");
@@ -75,6 +79,7 @@ int main(int argc, char **argv) {
   TTree::SetMaxTreeSize((Long_t)1*(Long_t)1024*(Long_t)1024*(Long_t)1024);
   tree->Branch("TGretina","TGretina",&gretina);
   tree->Branch("TPhosWall","TPhosWall",&phoswall);
+  tree->Branch("TLaBr","TLaBr",&labr);
 
   bool run = true;
   int loopcounter=0;
@@ -98,6 +103,7 @@ int main(int argc, char **argv) {
 
       gretina->Clear();
       phoswall->Clear();
+      labr->Clear();
     }
 
     switch(event->GetEventType()) {
@@ -112,6 +118,13 @@ int main(int argc, char **argv) {
         PWFragment frag(*event);
         phoswall->AddPWHit(frag);
         phoscounter++;
+      }
+      break;
+      case 18: {
+        LaBrFragment frag(event);
+        //frag.Print();
+        labr->Set(frag);
+        labrcounter++;
       }
       break;
     };  

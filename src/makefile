@@ -35,6 +35,7 @@ LIBS =  -lTGRUTint
 LIBS += -lGEBFormat
 LIBS += -lG2Format
 LIBS += -lPWFormat
+LIBS += -lLaBrFormat
 #LIBS += -lDataParser
 #LIBS += -lGRSILoop
 #LIBS += -lMidasFormat
@@ -49,6 +50,7 @@ LIBS += -lKinematics
 
 DETLIBS =  -lGretina
 DETLIBS += -lPhosWall
+DETLIBS += -lLaBr
  
 #DETLIBS =  -lTigress
 #DETLIBS += -lSharc
