@@ -14,9 +14,9 @@ ClassImp(TGretinaHit)
 Float_t TGretinaHit::fFirstSegmentValue  = -1.0;   
 Float_t TGretinaHit::fSecondSegmentValue = -1.0;   
 
+TVector3 TGretinaHit::beam_direction;
 
-
-TGretinaHit::TGretinaHit() { Clear(); }
+TGretinaHit::TGretinaHit() { beam_direction.SetXYZ(0,0,1); Clear(); }
 
 
 TGretinaHit::~TGretinaHit() { }
@@ -59,6 +59,7 @@ bool TGretinaHit::CheckAddback(TGretinaHit& rhs) {
 }
 
 TGretinaHit::TGretinaHit(G2Fragment &frag) { 
+  beam_direction.SetXYZ(0,0,1);  
   Clear(); 
 
   fAddress        =   frag.GetAddress();

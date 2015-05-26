@@ -55,17 +55,13 @@ class TGretinaHit : public TObject {
       bool madevec = false;
       //int gid = fCrystalId;
       if(vec==0) {
-         vec = new TVector3;
-         vec->SetXYZ(0,0,1);
-         madevec = true;
+         vec = &beam_direction;
       }
       double tmp = 0;
       //if(beta != 0.00) {
       double gamma = 1/(sqrt(1-pow(beta,2)));
       tmp = fCoreEnergy*gamma *(1 - beta*TMath::Cos(GetPosition().Angle(*vec)));
       //}
-      if(madevec ) 
-        delete vec;
       return tmp;
    }
 
@@ -101,6 +97,8 @@ class TGretinaHit : public TObject {
     std::vector<Int_t>    fSegmentNumber;
     std::vector<TVector3> fInteractionPosition;
     std::vector<Float_t>  fSegmentEnergy;
+
+    static TVector3 beam_direction; //!
 
   ClassDef(TGretinaHit,1)
 
