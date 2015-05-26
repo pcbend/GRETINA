@@ -285,7 +285,7 @@ bool RemovePeaks(TH1 **hists, unsigned int Nhists)
    */
 }
 
-void Prompt()   { Getlinem(EGetLineMode::kInit,((TRint*)gApplication)->GetPrompt()); }
+void Prompt()   {  }  //Getlinem(EGetLineMode::kInit,((TRint*)gApplication)->GetPrompt()); }
 
 void Help()     { printf("This is helpful information.\n"); }
 void Commands() { printf("this is a list of useful commands.\n");}
