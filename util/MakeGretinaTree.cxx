@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <string>
+#include <stdexcept>
 
 #include <TGEBMultiFile.h>
 #include <TGEBFile.h>
@@ -48,11 +49,12 @@ int main(int argc, char **argv) {
   }
 
   TGEBEvent *event = new TGEBEvent;
-  int bytes = multi.Read(event);
-  if(bytes < 0) {
+  size_t bytes = multi.Read(event);
+  if(bytes < 1) {
      printf("problem reading inputfiles.\n");
      return 1;
   }
+
   Long_t LastTime = event->GetTimeStamp();
   Int_t  LastType = event->GetEventType();
 
@@ -87,7 +89,12 @@ int main(int argc, char **argv) {
 
   while(run) {
     loopcounter++;
-    bytes = multi.Read(event);
+    try {
+      bytes = multi.Read(event);
+    } catch(const std::out_of_range &oor) {
+       run =false;
+       break;
+    }
     if(bytes<0) {
        run =false;
        break;

@@ -89,7 +89,7 @@ int TGEBMultiFile::Read(TGEBEvent *gevent)  {
 
 void TGEBMultiFile::Clear(Option_t *opt) {  }
 
-void TGEBMultiFile::Print(Option_t *opt) { 
+void TGEBMultiFile::Print(Option_t *opt) const { 
  
   for(int x=0;x<fEvents.size();x++) {
     printf("[%.02f/%.02f ] [%08i]   file: %s\t" DYELLOW "Last TimeStamp read: %lu \t" DRED "Current TimeStamp: %lu\t" MAGENTA  "%lu" RESET_COLOR "\n",
@@ -118,3 +118,36 @@ int TGEBMultiFile::FindMinimum() {
 
   return smallest;
 }
+
+void TGEBMultiFile::ShowStatus(Option_t *opt) const { 
+  
+   printf("\tfFileList.size()      = %i\n",fFileList.size());
+   printf("\tfFiles.size()         = %i\n",fFiles.size());
+   printf("\tfEvents.size()        = %i\n",fEvents.size());
+   printf("\tfEventCounter.size()  = %i\n",fEventCounter.size());
+   printf("\tfLastTimeStamp.size() = %i\n",fLastTimeStamp.size());
+   printf("\tfBytes.size()         = %i\n",fBytes.size());
+   printf("\tfBytesRead.size()     = %i\n",fBytesRead.size());
+
+
+
+   
+   //int         fLastFileNumber;
+   //int         fLastErrno;
+   //std::string fLastError;
+   
+   //Int_t  fExperimentNumber;
+   //Int_t  fRunNumber;
+   
+
+}
+
+
+
+
+
+
+
+
+
+

@@ -31,8 +31,9 @@ class TGEBMultiFile : public TObject {
     const char *GetLastFileName()  const { return fFileList.at(fLastFileNumber).c_str();  }
     int         GetLastErrno()     const { return fLastErrno;         }
     const char *GetLastError()     const { return fLastError.c_str(); }
-  
-    void Print(Option_t *opt = "");
+ 
+    void ShowStatus(Option_t *opt = "") const; 
+    void Print(Option_t *opt = "") const;
     void Clear(Option_t *opt = "");
 
     //size_t GetFileSize(); 
