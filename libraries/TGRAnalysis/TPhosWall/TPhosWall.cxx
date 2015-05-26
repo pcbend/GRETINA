@@ -61,7 +61,7 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
       }
       else
          fPosition.push_back(frag.GetSegment(x).Position());
-      if(BDiffCal(x)>fLargestValue)
+      if(B(x)>fLargestValue)
          fLargestHit=x;
 
    }
