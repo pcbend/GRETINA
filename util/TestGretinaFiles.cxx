@@ -65,20 +65,6 @@ int main(int argc, char **argv) {
   int gretcounter = 0;
   int labrcounter = 0;
 
-  if(outfilename.length()==0) {
-     printf("\tno outfile file specified, using default: myoutput.root\n");
-     outfilename.assign("myoutput.root");
-  }
-
-
-  if(outfilename.find(".root")==std::string::npos)
-     outfilename.append(".root");
-
-  TFile *outfile = new TFile(outfilename.c_str(),"recreate");
-  TTree *tree = new TTree("Data","Data");
-  TTree::SetMaxTreeSize((Long_t)1*(Long_t)1024*(Long_t)1024*(Long_t)1024);
-  tree->Branch("TGretina","TGretina",&gretina);
-  tree->Branch("TPhosWall","TPhosWall",&phoswall);
 
   bool run = true;
   int loopcounter=0;
@@ -87,16 +73,18 @@ int main(int argc, char **argv) {
     loopcounter++;
     bytes = multi.Read(event);
     if(bytes<0) {
-       run =false;
-       break;
+       printf("bytes = %i\n",bytes);
+       //run =false;
+       continue;
+       //break;
     }   
     if(event->GetEventType()==8)
        continue;
     if(abs(event->GetTimeStamp()-LastTime)>500) {  // 5 us build time.
-      printf(DRED);
-      printf("Build called.\t");
-      std::cout << event->GetTimeStamp() << "  -  " << LastTime << "  =  " << event->GetTimeStamp() - LastTime;
-      printf(RESET_COLOR "\n");
+      //printf(DRED);
+      //printf("Build called.\t");
+      //std::cout << event->GetTimeStamp() << "  -  " << LastTime << "  =  " << event->GetTimeStamp() - LastTime;
+      //printf(RESET_COLOR "\n");
  
 
       //phoswall->FindWeightedPosition();
@@ -113,9 +101,8 @@ int main(int argc, char **argv) {
       case 1: {
        //printf("\tfound gretina bank 1\n");
 //       std::cout << *((TGEBEvent::TGEBBankType1*)event->GetData());
-        //G2Fragment frag(*event);
+        G2Fragment frag(*event);
         //frag.Print();
-
         //TGretinaHit hit(frag);
         //gretina->AddGretinaHit(hit);
         gretcounter++;
@@ -123,18 +110,14 @@ int main(int argc, char **argv) {
       break;
       case 17: {
         PWFragment frag(*event);
-       
-//        frag.Print();
-
+        //frag.Print();
         //phoswall->AddPWHit(frag);
         phoscounter++;
       }
       break;
       case 18: 
-        event->Print();
-        {   
-          LaBrFragment frag(event);     
-        }
+        //event->Print();
+        LaBrFragment frag(event);     
         labrcounter++;
         break;
     };  
@@ -147,9 +130,6 @@ int main(int argc, char **argv) {
        multi.Print();
 
   }
-  outfile = tree->GetCurrentFile();
-  outfile->Write();
-  outfile->Close();
 
 
   return 0;

@@ -78,7 +78,7 @@ int TGEBMultiFile::Read(TGEBEvent *gevent)  {
   gevent->Copy((TGEBEvent&)(*fEvents.at(pos))); 
   fEventCounter.at(pos)++;
   //printf("eventtype %i        |   timestamp  %lu  \n",gevent->GetEventType(),gevent->GetTimeStamp());
-  if( GetNextEvent(pos) )
+  if( GetNextEvent(pos)>-1 )
     return fBytesRead.at(pos);
   else 
     return -1;

@@ -431,6 +431,13 @@ bool GCanvas::HandleKeyboardPress(Event_t *event,UInt_t *keysym) {
          case kKey_B:
             SetBackGroundSubtractionType();
             break;
+         case kKey_c:
+            if(!HasCrosshair()) 
+               SetCrosshair();
+            else 
+               SetCrosshair(0);
+            edit = true;
+            break;
          case kKey_e:
             if(GetNMarkers()<2)
                break;
@@ -909,7 +916,8 @@ bool GCanvas::PeakFit(GMarker *m1,GMarker *m2) {
   //hist->GetFunction("gaus")->Delete();
 
   mypeak->Fit(hist);
-  mypeak->Background()->Draw("SAME");
+  hist->GetListOfFunctions()->Add(mypeak->Background());
+  //mypeak->Background()->Draw("SAME");
   /*
   double param[3];
   double error[3];
@@ -987,7 +995,8 @@ bool GCanvas::PeakFitQ(GMarker *m1,GMarker *m2) {
     printf("peakfit not found??\n");
     return false;
   }
-  mypeak->Background()->Draw("SAME");
+  hist->GetListOfFunctions()->Add(mypeak->Background());
+  //mypeak->Background()->Draw("SAME");
   mypeak->Print();
   
      

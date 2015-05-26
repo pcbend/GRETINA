@@ -156,7 +156,7 @@ void TGRUTint::PrintLogo(bool print) {
 
      const unsigned int width = reflength + (reflength % 2);
      printf("\t*%s*\n", std::string(width,'*').c_str());   
-     printf("\t*%*s%*s*\n",width/2+4,"GRUT Sort", width/2-4, "");
+     printf("\t*%*s%*s*\n",width/2+4,"GRET Scope", width/2-4, "");
      printf("\t*%*s%*s*\n",width/2+19," a GRETINA sorting and analysis package", width/2-19, "");
      //printf("\t*%*s%*s*\n",width/2+reflength/2, ref.c_str(), width/2-reflength/2, "");
      //printf("\t*%*s%*s*\n",width/2+14,"A lean, mean sorting machine", width/2-14, "");

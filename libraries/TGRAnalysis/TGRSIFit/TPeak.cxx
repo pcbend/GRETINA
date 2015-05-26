@@ -58,7 +58,7 @@ TPeak::TPeak() : TGRSIFit("photopeakbg",TGRSIFunctions::PhotoPeakBG,0,1000,10){
 }
 
 TPeak::~TPeak(){
-   if(background) delete background;
+   //if(background) delete background;  if he is displayed on a canvas, he will be delete on the removale form the list.
 }
 
 void TPeak::InitNames(){
@@ -322,12 +322,14 @@ void TPeak::Print(Option_t *opt) const {
 //Prints TPeak properties. To see More properties use the option "+"
    printf("Name:        %s \n", this->GetName()); 
    printf("Centroid:    %lf +/- %lf \n", this->GetParameter("centroid"),this->GetParError(GetParNumber("centroid")));
+   printf("FWHM:        %.02f +/- %.02f\n",fabs(this->GetParameter("sigma")*2.35),this->GetParError(GetParNumber("sigma"))*2.35);
    printf("Area: 	      %lf +/- %lf \n", farea, fd_area);
    printf("Chi^2/NDF:   %lf\n",fchi2/fNdf);
    if(strchr(opt,'+') != NULL){
       TF1::Print();
       TGRSIFit::Print(opt); //Polymorphise this a bit better
    }
+   printf("\n");
 }
 
 const char * TPeak::PrintString(Option_t *opt) const {
@@ -337,6 +339,7 @@ const char * TPeak::PrintString(Option_t *opt) const {
    temp.append("Centroid:    ");temp.append(Form("%lf",this->GetParameter("centroid")));
                                 temp.append(" +/- ");
                                 temp.append(Form("%lf",this->GetParError(GetParNumber("centroid")))); temp.append("\n");
+   temp.append("FWHM:        ");temp.append(Form("%.02f +/- %.02f\n",fabs(this->GetParameter("sigma")*2.35),this->GetParError(GetParNumber("sigma"))*2.35));
    temp.append("Area: 	     ");temp.append(Form("%lf",farea)); 
                                 temp.append(" +/- ");
                                 temp.append(Form("%lf",fd_area));    temp.append("\n"); 

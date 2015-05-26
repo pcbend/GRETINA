@@ -2,7 +2,7 @@
 #define GRUT_VERSION_H
 
 
-#define GRET_RELEASE "0.12 beta"
+#define GRET_RELEASE "0.3 beta"
 #define GRET_RELEASE_DATE ""
 
 #define GRET_GIT_COMMIT ""
