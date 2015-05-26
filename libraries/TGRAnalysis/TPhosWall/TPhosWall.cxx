@@ -419,10 +419,10 @@ void TPhosWall::SetWallPositions() {
    int detoffset;
    double phi;
    for(int i=0;i<4;i++) {
-      if(i==0)      {detoffset = 0;    phi = TMath::DegToRad()*0;}
-      else if(i==1) {detoffset = 64;   phi = TMath::DegToRad()*270;}
-      else if(i==2) {detoffset = 64*2; phi = TMath::DegToRad()*180;}
-      else if(i==3) {detoffset = 64*3; phi = TMath::DegToRad()*90;}
+      if(i==0)      {detoffset = 0;    phi = TMath::DegToRad()*0   + TMath::PiOver2() ;}
+      else if(i==1) {detoffset = 64;   phi = TMath::DegToRad()*270 + TMath::PiOver2() ;}
+      else if(i==2) {detoffset = 64*2; phi = TMath::DegToRad()*180 + TMath::PiOver2() ;}
+      else if(i==3) {detoffset = 64*3; phi = TMath::DegToRad()*90  + TMath::PiOver2() ;}
 
       fWallPositions[0  + detoffset] = new TVector3;  fWallPositions[0 + detoffset]->SetMagThetaPhi(55.0,TMath::DegToRad()*37.141,TMath::DegToRad()*20.966 +  phi);
       fWallPositions[1  + detoffset] = new TVector3;  fWallPositions[1 + detoffset]->SetMagThetaPhi(55.0,TMath::DegToRad()*32.895,TMath::DegToRad()*24.772 +  phi);
