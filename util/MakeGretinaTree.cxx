@@ -89,6 +89,8 @@ int main(int argc, char **argv) {
 
   while(run) {
     loopcounter++;
+    //if(loopcounter > 1000)
+    //  break;
     try {
       bytes = multi.Read(event);
     } catch(const std::out_of_range &oor) {

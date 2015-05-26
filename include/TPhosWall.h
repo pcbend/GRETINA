@@ -46,10 +46,10 @@ class TPhosWall : public TObject {
 
     const inline Int_t    GetBDiffSum() { int chg=0; for(int x=0;x<Size();x++) {chg+=BDiffCal(x);} return chg;}
 
-    const inline Int_t    Address(const int &i)    { if((i<1)||(i>(Size()-1))) return -1; return fAddress.at(i); }
-    const inline Int_t    A(const int &i)          { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fACharge.at(i); }
-    const inline Int_t    B(const int &i)          { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fBCharge.at(i); }
-    const inline Int_t    C(const int &i)          { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fCCharge.at(i); }
+    const inline Int_t    Address(const int &i)    { if((i<0)||(i>(Size()-1))) return -1; return fAddress.at(i); }
+    const inline Int_t    A(const int &i)          { if((i<0)||(i>(Size()-1))) return -1; return (Int_t)fACharge.at(i); }
+    const inline Int_t    B(const int &i)          { if((i<0)||(i>(Size()-1))) return -1; return (Int_t)fBCharge.at(i); }
+    const inline Int_t    C(const int &i)          { if((i<0)||(i>(Size()-1))) return -1; return (Int_t)fCCharge.at(i); }
                Float_t    ACal(const int &i);
                Float_t    BCal(const int &i);
                Float_t    CCal(const int &i);

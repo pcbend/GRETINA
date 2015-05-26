@@ -64,7 +64,7 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
 
       //if(B(x)>fLargestValue) {
       if(fBCharge.back()>fLargestValue) {
-         fLargestValue = B(x);
+         fLargestValue = fBCharge.back();
          fLargestHit=x;
       }
    }
