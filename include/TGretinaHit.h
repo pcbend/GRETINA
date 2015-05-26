@@ -18,6 +18,7 @@ class TGretinaHit : public TObject {
     ~TGretinaHit();
 
     inline Double_t GetTime()       { return (double)fTimeStamp - (double)fWalkCorrection; }
+    inline Int_t    GetAddress()    { return fAddress;    }
     inline Int_t    GetCrystalId()  { return fCrystalId;  }
     inline Float_t  GetCoreEnergy() { return fCoreEnergy; }
     inline Float_t  GetCoreCharge() { return fCoreCharge; }
@@ -82,6 +83,7 @@ class TGretinaHit : public TObject {
     Long_t  fTimeStamp;
     Float_t fWalkCorrection;
 
+    Int_t   fAddress;
     Int_t   fCrystalId;
     Float_t fCoreEnergy;
     Int_t   fCoreCharge;
@@ -95,6 +97,7 @@ class TGretinaHit : public TObject {
     static  Float_t fFirstSegmentValue;    
     static  Float_t fSecondSegmentValue;   
 
+    //std::vector<Int_t>    fSegmentAddress;
     std::vector<Int_t>    fSegmentNumber;
     std::vector<TVector3> fInteractionPosition;
     std::vector<Float_t>  fSegmentEnergy;

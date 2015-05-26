@@ -50,9 +50,14 @@ class PWFragment : public TObject {
     const inline Short_t    GetC()        { if(fLargestHit>=fSegments.size()) return 0; return fSegments.at(fLargestHit).C(); }
     const inline Short_t    GetLargestNumber() { return fLargestHit; }  
 
+    const inline Int_t      GetAddress()  { if(fLargestHit>=fSegments.size()) return -1; return ((fType<<24)+(fSegments.at(fLargestHit).Pixel())) ; }
+    const inline Int_t      Address(const int &i) { return ((fType<<24)+(fSegments.at(i).Pixel())) ; }
+
+
   private:
     Long_t  fTimeStamp;
- 
+    Int_t   fType;
+
     Short_t fLargestHit;
 
     Int_t   fNumberHits;

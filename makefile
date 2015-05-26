@@ -46,7 +46,7 @@ MAKE=make --no-print-directory
 
 .PHONY: all subdirs $(ALLDIRS) clean util
 
-all: print subdirs bin gruthist grutinizer end
+all: print subdirs bin grethist grscope end
 
 #docs: print subdirs bin grsihist grsisort html end
 
@@ -63,16 +63,16 @@ src: print libraries
 $(ALLDIRS):
 	@$(MAKE) -C $@
 
-grutinizer: src
+grscope: src
 	@mv $</$@ bin/$@
-	@cp util/grut-config bin/
+	@cp util/gret-config bin/
 
 bin:
 ifeq ($(wildcard ./bin),) 
 	@mkdir bin	 
 endif
 
-gruthist:
+grethist:
 ifeq ($(wildcard ./.geb_history),)
 	@touch .grut_history
 endif
@@ -82,7 +82,7 @@ endif
 #	@root -b -q util/html_generator.C >/dev/null
 #	@$(RM) tempfile.out
 
-end: grutinizer
+end: grscope
 	@printf " ${WARN_COLOR}Compilation Success. woohoo!${NO_COLOR}\n\n"
 
 clean:
