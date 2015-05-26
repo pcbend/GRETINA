@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
        //printf("\tfound gretina bank 1\n");
 //       std::cout << *((TGEBEvent::TGEBBankType1*)event->GetData());
         G2Fragment frag(*event);
-        //frag.Print();
+        frag.Print();
         //TGretinaHit hit(frag);
         //gretina->AddGretinaHit(hit);
         gretcounter++;
@@ -120,14 +120,14 @@ int main(int argc, char **argv) {
       break;
       case 17: {
         PWFragment frag(*event);
-        //frag.Print();
+        frag.Print();
         //phoswall->AddPWHit(frag);
         phoscounter++;
       }
       break;
       case 18: 
         //event->Print();
-        LaBrFragment frag(event);     
+        LaBrFragment frag(event);    
         labrcounter++;
         break;
     };  
