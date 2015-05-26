@@ -1,4 +1,4 @@
-SUBDIRS = TGretina TPhosWall TLaBr  
+SUBDIRS = TGretina TPhosWall TLaBr TGRSIFit 
 ALLDIRS = $(SUBDIRS)
 
 .PHONY: subdirs $(ALLDIRS) clean

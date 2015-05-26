@@ -131,8 +131,10 @@ void GCanvas::AddMarker(int x,int y,int dim) {
     mark->linex->Draw();
     mark->liney->Draw();
   }
-  if(fMarkers.size()>0) {
-    fMarkers.insert(fMarkers.begin(),mark);
+  if(fMarkers.size()>4) {
+    delete fMarkers.at(0);
+    fMarkers.erase(fMarkers.begin()); 
+    //fMarkers.insert(fMarkers.begin(),mark);
   } else {
     fMarkers.push_back(mark);
   }
@@ -149,6 +151,8 @@ void GCanvas::RemoveMarker() {
   fMarkers.erase(fMarkers.end()-1);
   return;
 }
+
+
 
 void GCanvas::OrderMarkers() { 
   std::sort(fMarkers.begin(),fMarkers.end());
@@ -454,10 +458,17 @@ bool GCanvas::HandleKeyboardPress(Event_t *event,UInt_t *keysym) {
             edit = GausBGFit();
             break;
          case kKey_l:
+            for(int i=0;i<hists.size();i++) {
+               hists.at(i)->GetYaxis()->UnZoom();
+            }
             SetLogy(0);
             edit = true;
             break;
          case kKey_L:
+            for(int i=0;i<hists.size();i++) {
+              if(hists.at(i)->GetYaxis()->GetXmin()<0)
+                 hists.at(i)->GetYaxis()->SetRangeUser(0,hists.at(i)->GetYaxis()->GetXmax());
+            }
             SetLogy(1);
             edit = true;
             break;
@@ -1117,7 +1128,6 @@ bool GCanvas::SetBGGate(GMarker *m1, GMarker *m2, GMarker *m3, GMarker *m4) {
       else {
         AddBGMarker(m3);
         
-        
         GMarker *mark = new GMarker(*m3);
         mark->x = m3->x + (abs(m1->x - m2->x)+1);
         mark->localx = gPad->AbsPixeltoX(mark->x);
@@ -1132,7 +1142,6 @@ bool GCanvas::SetBGGate(GMarker *m1, GMarker *m2, GMarker *m3, GMarker *m4) {
         mark->linex = new TLine(mark->localx,GetUymin(),mark->localx,GetUymax());
         mark->linex->SetLineColor(kBlue);
         mark->linex->Draw();
-
 
         RemoveMarker(); // remove marker #3 so the project will work...
       }
