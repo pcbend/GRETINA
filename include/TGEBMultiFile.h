@@ -26,7 +26,7 @@ class TGEBMultiFile : public TObject {
 
     void Close();
 
-    TGEBEvent *Read(); 
+    int Read(TGEBEvent*); 
 
     const char *GetLastFileName()  const { return fFileList.at(fLastFileNumber).c_str();  }
     int         GetLastErrno()     const { return fLastErrno;         }

@@ -47,8 +47,9 @@ int main(int argc, char **argv) {
     }
   }
 
-  TGEBEvent *event = multi.Read();
-  if(!event) {
+  TGEBEvent *event = new TGEBEvent;
+  int bytes = multi.Read(event);
+  if(bytes < 0) {
      printf("problem reading inputfiles.\n");
      return 1;
   }
@@ -86,14 +87,16 @@ int main(int argc, char **argv) {
 
   while(run) {
     loopcounter++;
-    event = multi.Read();
-    if(!event) {
+    bytes = multi.Read(event);
+    if(bytes<0) {
        run =false;
        break;
-    }   
+    }  
+ 
     if(event->GetEventType()==8)
        continue;
     if(abs(event->GetTimeStamp()-LastTime)>500) {  // 5 us build time.
+      //printf( DRED "build "  RESET_COLOR "\n");
       phoswall->FindWeightedPosition();
       gretina->BuildAddBack();
      

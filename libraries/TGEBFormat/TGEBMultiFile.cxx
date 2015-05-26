@@ -54,7 +54,8 @@ bool TGEBMultiFile::GetNextEvent(int i) {
     fLastTimeStamp.erase(fLastTimeStamp.begin()+i);
     fBytes.erase(fBytes.begin()+i);
     fBytesRead.erase(fBytesRead.begin()+i);
-
+    if(fFiles.size()==0)
+      return false;
   }
   return true;
 }
@@ -64,7 +65,9 @@ void TGEBMultiFile::InitiMultFiles()  {  }
 
 void TGEBMultiFile::Close()  {  }
 
-TGEBEvent *TGEBMultiFile::Read()  { 
+int TGEBMultiFile::Read(TGEBEvent *gevent)  { 
+  if(!gevent)
+    return 0;
   //int pos = std::min_element(std::begin(fEvents),std::end(fEvents)) - std::begin(fEvents); 
   int pos = FindMinimum();
   //printf("FindMinimum = %i\n",pos);
@@ -72,11 +75,13 @@ TGEBEvent *TGEBMultiFile::Read()  {
      return 0;
   //printf("pos = %i\n",pos);
   //std::cout << "pos = " <<  std::min_element(std::begin(fEvents),std::end(fEvents)) - std::begin(fEvents) << std::endl; 
-  TGEBEvent *gevent = fEvents.at(pos); 
+  gevent->Copy((TGEBEvent&)(*fEvents.at(pos))); 
   fEventCounter.at(pos)++;
   //printf("eventtype %i        |   timestamp  %lu  \n",gevent->GetEventType(),gevent->GetTimeStamp());
-  GetNextEvent(pos);
-  return gevent;
+  if( GetNextEvent(pos) )
+    return fBytesRead.at(pos);
+  else 
+    return -1;
 } 
 
 
@@ -110,5 +115,6 @@ int TGEBMultiFile::FindMinimum() {
       last = fEvents.at(x)->GetTimeStamp();
     }
   }
+
   return smallest;
 }
