@@ -1,22 +1,11 @@
 
-OBJECTS = GROOTGuiFactory.o GRootCanvas.o GRootBrowser.o GCanvas.o GDirectory.o \
-          GRootGlobals.o GRootObjectManager.o GH1D.o GROOTDict.o GTree.o GChain.o GFile.o
+OBJECTS = LaBrFragment.o LaBrSegment.o TLaBr.o TLaBrHit.o TLaBrDict.o 
 INCDIR = $(BASE)/include
-DICTOBJ =  $(INCDIR)/GROOTGuiFactory.h 
-DICTOBJ += $(INCDIR)/GRootCanvas.h 
-DICTOBJ += $(INCDIR)/GRootObjectManager.h 
-DICTOBJ += $(INCDIR)/GRootGlobals.h 
-DICTOBJ += $(INCDIR)/GRootBrowser.h 
-DICTOBJ += $(INCDIR)/GCanvas.h 
-DICTOBJ += $(INCDIR)/GDirectory.h 
-DICTOBJ += $(INCDIR)/GH1D.h 
-DICTOBJ += $(INCDIR)/GFile.h 
-DICTOBJ += $(INCDIR)/GTree.h 
-DICTOBJ += $(INCDIR)/GChain.h
-DICTNAM = GROOT
+DICTOBJ = $(INCDIR)/TLaBr.h $(INCDIR)/TLaBrHit.h $(INCDIR)/LaBrSegment.h $(INCDIR)/LaBrFragment.h 
+DICTNAM = TLaBr
 
 CFLAGS += -fPIC
-LFLAGS = `root-config --glibs`
+#LFLAGS = `root-config --glibs`
 
 #COMP_STRING="Now Compling "
 DICT_STRING="Now Making Dict for ${OBJ_COLOR}$< ${NO_COLOR}"
@@ -25,10 +14,10 @@ CAT=cat
 
 .PHONY: all clean gone
 
-all: libGROOT.so
+all: libLaBr.so
 	@printf "\r ${FIN_COLOR}%s${FIN_OBJ_COLOR}%-30s ${NO_COLOR}\n" $(FIN_STRING) $^ ;
 
-%.so: $(OBJECTS)
+libLaBr.so: $(OBJECTS)
 	@printf " ${COM_COLOR}%s${OBJ_COLOR}%s${NO_COLOR}" $(COMP_STRING) "$@"
 	@$(COMPILESHARED)$@ $(CFLAGS) $(LFLAGS) -o$@ $(OBJECTS) 2> temp.log || touch temp.errors
 	@if test -e temp.errors; then \
@@ -41,7 +30,7 @@ all: libGROOT.so
 		else printf "\r ${COM_COLOR}%s${OBJ_COLOR}%-30s ${OK_COLOR}%*s${NO_COLOR}\n" $(COMP_STRING) $@ 10  $(OK_STRING); \
 		fi;
 	@$(RM) -f temp.errors temp.log
-	@cp $@ ..
+	cp $@ $(BASE)/libraries
 
 %.o: %.cxx
 	@printf " ${COM_COLOR}%s ${OBJ_COLOR}%s${NO_COLOR}" $(COMP_STRING) $@ 

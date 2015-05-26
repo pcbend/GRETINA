@@ -41,11 +41,14 @@ class LaBrFragment : public TObject {
 
     LaBrSegment *FindSegment(const int &id);
 
-    inline Int_t   &GetTDCRef()                  { return fTdcReference; }
-    inline void     SetTDCRef(const int &tdc_ref) { fTdcReference = tdc_ref; }
+    inline Int_t      &GetTDCRef()                  { return fTdcReference; }
+    inline void        SetTDCRef(const int &tdc_ref) { fTdcReference = tdc_ref; }
 
- 
+
+    const inline Int_t GetAddress(const int &i) { return ((fType<<24)+(fSegments.at(i).ID())); }
+
   private:
+    Int_t   fType;
     Long_t  fTimeStamp;
     Int_t   fNumberSegments;
     Int_t   fTdcReference;

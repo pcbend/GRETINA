@@ -27,9 +27,10 @@ class G2Fragment : public TObject {
     void Copy(const TGEBEvent::TGEBBankType1&);
     void Copy(const TGEBEvent&);  
 
-    void Clear(Option_t *opt ="");
-    void Print(Option_t *opt ="") const;
-
+    void Clear(Option_t *opt ="");                             ///      GEB   Cry   SEG       
+    void Print(Option_t *opt ="") const;                       ///      Type  ID    Id              Seg  = 0-35 
+                                                               ///  0xf  ff   fff   ff              Core =  36
+    const inline Int_t    GetAddress()                { return ((fType<<24)+(fCrystal<<8)) + 36  ; }
       
     const inline Int_t   &GetCrystalNumber()          { return fCrystal; }
     const inline Int_t   &GetNumberOfHits()           { return fNumberHits;  }
@@ -54,6 +55,7 @@ class G2Fragment : public TObject {
     const inline int GetSegmentSize() { return fSegments.size(); }
 
   private:
+    Int_t   fType;
     Int_t   fCrystal;
     Int_t   fNumberHits;
     Float_t fTotalE;

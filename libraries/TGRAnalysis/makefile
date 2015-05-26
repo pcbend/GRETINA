@@ -1,4 +1,4 @@
-SUBDIRS = TGRETint TGEBFormat TGEBUtil TGRAnalysis TKinematics TNucleus GROOT 
+SUBDIRS = TGretina TPhosWall TLaBr  
 ALLDIRS = $(SUBDIRS)
 
 .PHONY: subdirs $(ALLDIRS) clean
@@ -12,5 +12,8 @@ clean:
 	@for dir in $(ALLDIRS); do \
 		$(MAKE) -C $$dir $@; \
 	done
+
+
+
 
 

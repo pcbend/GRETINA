@@ -11,7 +11,7 @@
 #include "RConfigure.h"
 
 #include "GRootCanvas.h"
-//#include "GRootCanvasManager.h"
+#include "GRootCanvasManager.h"
 
 #include "TRootApplication.h"
 #include "TRootHelpDialog.h"
@@ -665,7 +665,7 @@ void GRootCanvas::Close()
 {
    // Called via TCanvasImp interface by TCanvas.
    //printf("Closing canvas 0x%08x\n",((TCanvasImp*)this)->Canvas());
-   //GRootObjcetManager::CanvasClosed(((TCanvasImp*)this)->Canvas());
+   GRootCanvasManager::RemoveCanvas(((TCanvasImp*)this)->Canvas());
    TVirtualPadEditor* gged = TVirtualPadEditor::GetPadEditor(kFALSE);
    if(gged && gged->GetCanvas() == fCanvas) {
       if (fEmbedded) {
@@ -1477,7 +1477,7 @@ void GRootCanvas::ShowEditor(Bool_t show)
       TGMainFrame *main = (TGMainFrame *)fParent->GetMainFrame();
       fMainFrame->HideFrame(fEditorFrame);
       if (main && main->InheritsFrom("TRootBrowser")) {
-         printf("I am here GRootCanvas 1469.\n");
+         //printf("I am here GRootCanvas 1469.\n");
          TRootBrowser *browser = (TRootBrowser *)main;
          if (!fEmbedded)
             browser->GetTabRight()->Connect("Selected(Int_t)", "GRootCanvas",
@@ -1502,7 +1502,7 @@ void GRootCanvas::ShowEditor(Bool_t show)
                }
             }
             else
-         printf("I am here GRootCanvas 1494.\n");
+            //printf("I am here GRootCanvas 1494.\n");
                fEditor = TVirtualPadEditor::GetPadEditor(kFALSE);
          }
          if (show) browser->GetTabLeft()->SetTab("Pad Editor");

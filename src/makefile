@@ -1,9 +1,9 @@
 
-OBJECTS = grutinizer.o 
+OBJECTS = grscope.o 
 vpath %.so $(BASE)/libraries
 LIBRARIES = libTGRUTint.so
 
-all:grutinizer
+all:grscope
 
 LDROOT =  $(shell root-config --glibs)  #`root-config --glibs`
 #LDROOT += -lXMLParser
@@ -33,9 +33,9 @@ endif
 
 LIBS =  -lTGRUTint
 LIBS += -lGEBFormat
-LIBS += -lG2Format
-LIBS += -lPWFormat
-LIBS += -lLaBrFormat
+#LIBS += -lG2Format
+#LIBS += -lPWFormat
+#LIBS += -lLaBrFormat
 #LIBS += -lDataParser
 #LIBS += -lGRSILoop
 #LIBS += -lMidasFormat
@@ -78,8 +78,8 @@ SYSLIBS += -lXpm
 
 #COMP_STRING="Now Compiling"
 
-grutinizer: $(OBJECTS) $(LIBRARIES)
-	@printf " ${COM_COLOR}%s ${OBJ_COLOR}\t grutinizer ${NO_COLOR}" $(COMP_STRING)
+grscope: $(OBJECTS) $(LIBRARIES)
+	@printf " ${COM_COLOR}%s ${OBJ_COLOR}\t grscope ${NO_COLOR}" $(COMP_STRING)
 	@$(CXX) $^ $(CFLAGS) $(CPPFLAGS) $(INC) $(LIBDIR) $(LIBS) $(DETLIBS) $(LDROOT) $(SYSLIBS) -o $@  2> temp.log || touch temp.errors
 	@if test -e temp.errors; then  \
 	 printf "\r ${COM_COLOR}%s ${OBJ_COLOR}%-30s ${ERROR_COLOR}%*s${NO_COLOR}\n" $(COMP_STRING) $@ 10 $(ERROR_STRING) \

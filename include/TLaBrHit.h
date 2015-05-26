@@ -20,6 +20,7 @@ class TLaBrHit : public TObject {
 
     inline Double_t GetTime()       { return (double)fTimeStamp; }
     inline Int_t    GetCrystalId()  { return fId;  }
+    inline Int_t    GetAddress()    { return fAddress; }
     inline Float_t  GetTDC()        { return fTdc-fRefTdc; }
     inline Float_t  GetEnergy()     { return fEnergy; }
     inline Float_t  GetCharge()     { return fCharge; }
@@ -31,13 +32,15 @@ class TLaBrHit : public TObject {
     TVector3 &GetPosition()         { return fPosition;    }
  
     //void SetPosition(TVector3 &vec) { fCorePosition = vec; } 
-    void SetTimeStamp(const Long_t ts)  { fTimeStamp = ts; }  
-    void SetTDCRef(const Int_t tdc_ref) { fRefTdc = tdc_ref; }  
+    void SetTimeStamp(const Long_t &ts)  { fTimeStamp = ts; }  
+    void SetTDCRef(const Int_t &tdc_ref) { fRefTdc = tdc_ref; }  
+    void SetAddress(const Int_t &add)    { fAddress = add;  }
 
     bool IsValid();
 
   private:
     Long_t  fTimeStamp;
+    Int_t   fAddress;
     Int_t   fRefTdc;    
     Int_t   fTdc;    
 

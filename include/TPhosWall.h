@@ -18,6 +18,8 @@ class TPhosWall : public TObject {
     void AddPWHit(PWFragment &frag);
     int  Size() { return fTime.size(); }
 
+    const inline Int_t   GetAddress()   { if(Size()<1) return -1; return Address(GetLargestNumber()); }
+
     //const inline Int_t    GetA()        { if(fLargestHit>=fTime.size()) return 0; return (Int_t)fACharge.at(fLargestHit); }
     const inline Int_t    GetA()        { if(Size()<1) return -1; return A(GetLargestNumber()); }
     //const inline Int_t    GetB()        { if(fLargestHit>=fTime.size()) return 0; return (Int_t)fBCharge.at(fLargestHit); }
@@ -44,15 +46,16 @@ class TPhosWall : public TObject {
 
     const inline Int_t    GetBDiffSum() { int chg=0; for(int x=0;x<Size();x++) {chg+=BDiffCal(x);} return chg;}
 
-    const inline Int_t    A(const int &i)        { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fACharge.at(i); }
-    const inline Int_t    B(const int &i)        { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fBCharge.at(i); }
-    const inline Int_t    C(const int &i)        { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fCCharge.at(i); }
+    const inline Int_t    Address(const int &i)    { if((i<1)||(i>(Size()-1))) return -1; return fAddress.at(i); }
+    const inline Int_t    A(const int &i)          { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fACharge.at(i); }
+    const inline Int_t    B(const int &i)          { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fBCharge.at(i); }
+    const inline Int_t    C(const int &i)          { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fCCharge.at(i); }
                Float_t    ACal(const int &i);
                Float_t    BCal(const int &i);
                Float_t    CCal(const int &i);
                  Int_t    BDiffCal(const int &i);
-    const inline Int_t    Time(const int &i)     { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fTime.at(i);    }
-    const inline Int_t    Pixel(const int &i)    { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fPixel.at(i); }
+    const inline Int_t    Time(const int &i)       { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fTime.at(i);  }
+    const inline Int_t    Pixel(const int &i)      { if((i<1)||(i>(Size()-1))) return -1; return (Int_t)fPixel.at(i); }
 
     Int_t    GetASmartSum(float res = 20.0,int threshold=200); 
     Int_t    GetBSmartSum(float res = 20.0,int threshold=200);
@@ -91,6 +94,7 @@ class TPhosWall : public TObject {
     Int_t fMultiplicity;
 
     std::vector<TVector3> fPosition;
+    std::vector<Int_t>    fAddress;
     std::vector<Short_t>  fACharge;
     std::vector<Short_t>  fBCharge;
     std::vector<Short_t>  fCCharge;
