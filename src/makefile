@@ -46,7 +46,7 @@ LIBS += -lNucleus
 LIBS += -lKinematics
 #LIBS += -lSRIM
 #LIBS += -lTCal
-#LIBS += -lTGRSIFit
+LIBS += -lTGRSIFit
 
 DETLIBS =  -lGretina
 DETLIBS += -lPhosWall
