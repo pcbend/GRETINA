@@ -44,7 +44,7 @@ incdir=$GEBSYS/include
 utildir=$GEBSYS/etc
 
 
-grutlibs="-lGEBFormat -lNucleus -lKinematics -lTGRSIFits -lGROOT"
+grutlibs="-lGEBFormat -lNucleus -lKinematics -lTGRSIFit -lGROOT"
 detlibs="-lGretina -lPhosWall -lLaBr "
 grutmore="-lGRUTint"
 
