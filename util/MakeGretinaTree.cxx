@@ -147,6 +147,17 @@ int main(int argc, char **argv) {
        multi.Print();
 
   }
+
+  ///build anything left in the buffer before we close.
+  phoswall->FindWeightedPosition();
+  gretina->BuildAddBack();
+  tree->Fill();      
+  gretina->Clear();
+  phoswall->Clear();
+  labr->Clear();
+  
+
+
   outfile = tree->GetCurrentFile();
   outfile->Write();
   outfile->Close();
