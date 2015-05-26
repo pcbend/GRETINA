@@ -62,7 +62,8 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
       else
          fPosition.push_back(frag.GetSegment(x).Position());
 
-      if(B(x)>fLargestValue) {
+      //if(B(x)>fLargestValue) {
+      if(fBCharge.back()>fLargestValue) {
          fLargestValue = B(x);
          fLargestHit=x;
       }
