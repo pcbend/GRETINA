@@ -25,6 +25,7 @@ TList *hpge_list  = new TList;
 TList *pwall_list = new TList;
 TList *misc_list  = new TList;
 
+TList *pwall_pixel_list[256];
 
 
 void PrintHelp();
@@ -57,6 +58,10 @@ int main(int argc,char **argv) {
 
   int nentries = chain->GetEntries();
   
+  for(int y=0;y<256;y++) {
+    pwall_pixel_list[y] = new TList;
+  }
+
   //TNucleus *beam     = new TNucleus("138Ba");
   //TNucleus *target   = new TNucleus("13C");
   //TNucleus *recoil   = new TNucleus("139Ba");
@@ -286,6 +291,39 @@ int main(int argc,char **argv) {
       }
       mat->Fill(phoswall->Pixel(p),phoswall->Time(p));
 
+      hname.assign("A_B_largest");
+      mat = (TH2F*)pwall_list->FindObject(hname.c_str());
+      if(!mat) {
+        mat = new TH2F(hname.c_str(),hname.c_str(),2000,0,8000,2000,0,8000);
+        pwall_list->Add(mat);
+      }
+      mat->Fill(phoswall->GetA(),phoswall->GetB());
+       
+      hname.assign("B_C_largest");
+      mat = (TH2F*)pwall_list->FindObject(hname.c_str());
+      if(!mat) {
+        mat = new TH2F(hname.c_str(),hname.c_str(),2000,0,8000,2000,0,8000);
+        pwall_list->Add(mat);
+      }
+      mat->Fill(phoswall->GetB(),phoswall->GetC());
+
+
+      hname.assign(Form("A_B_%03i",phoswall->Pixel(p)));
+      mat = (TH2F*)pwall_pixel_list[phoswall->Pixel(p)]->FindObject(hname.c_str());
+      if(!mat) {
+        mat = new TH2F(hname.c_str(),hname.c_str(),2000,0,8000,2000,0,8000);
+        pwall_pixel_list[phoswall->Pixel(p)]->Add(mat);
+      }
+      mat->Fill(phoswall->A(p),phoswall->B(p));
+
+      hname.assign(Form("B_C_%03i",phoswall->Pixel(p)));
+      mat = (TH2F*)pwall_pixel_list[phoswall->Pixel(p)]->FindObject(hname.c_str());
+      if(!mat) {
+        mat = new TH2F(hname.c_str(),hname.c_str(),2000,0,8000,2000,0,8000);
+        pwall_pixel_list[phoswall->Pixel(p)]->Add(mat);
+      }
+      mat->Fill(phoswall->B(p),phoswall->C(p));
+
     }
      
 
@@ -316,6 +354,14 @@ int main(int argc,char **argv) {
   outfile.cd("PWall");
   pwall_list->Write(); 
   outfile.cd("/");
+
+  for(int y=0;y<256;y++) {
+    outfile.mkdir(Form("PWall/Pixel_%03i",y)); 
+    outfile.cd(Form("PWall/Pixel_%03i",y)); 
+    pwall_pixel_list[y]->Sort();
+    pwall_pixel_list[y]->Write();
+    outfile.cd("/");
+  }
 
   outfile.mkdir("misc"); 
   outfile.cd("misc");
