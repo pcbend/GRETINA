@@ -122,7 +122,7 @@ int main(int argc,char **argv) {
       for(int g2=0;g2<gretina->NumberOfGretinaHits();g2++) { 
          if(g2==g)
            continue;
-         TGretinaHit *ghit2 = gretina->GetHit(g);
+         TGretinaHit *ghit2 = gretina->GetHit(g2);
 
          hname.assign("Gamma_Gamma_LabEnergy");
          mat = (TH2F*)hpge_list->FindObject(hname.c_str());
@@ -197,7 +197,7 @@ int main(int argc,char **argv) {
       for(int a2=0;a2<gretina->NumberOfAddbackHits();a2++) {
          if(a2 == a) 
            continue;
-         TGretinaHit *ahit2 = gretina->GetAddbackHit(a);
+         TGretinaHit *ahit2 = gretina->GetAddbackHit(a2);
 
          hname.assign("Gamma_Gamma_LabEnergy_Addback");
          mat = (TH2F*)hpge_list->FindObject(hname.c_str());
@@ -237,6 +237,15 @@ int main(int argc,char **argv) {
         labr_list->Add(mat);
       }
       mat->Fill(lhit->GetCrystalId(),lhit->GetEnergy());
+
+      hname.assign("Labr_LabEnergy_Total");
+      hist = (TH1F*)labr_list->FindObject(hname.c_str());
+      if(!hist) {
+        hist = new TH2F(hname.c_str(),hname.c_str(),4000,0,8000);
+        labr_list->Add(hist);
+      }
+      hist->Fill(lhit->GetEnergy());
+
 
       hname.assign("LabrId_TDC");
       mat = (TH2F*)labr_list->FindObject(hname.c_str());
