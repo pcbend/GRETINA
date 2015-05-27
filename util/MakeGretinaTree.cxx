@@ -8,6 +8,8 @@
 #include <TGEBFile.h>
 #include <TGEBEvent.h>
 
+#include <TChannel.h>
+
 #include <Globals.h>
 
 #include <Rtypes.h>
@@ -28,6 +30,10 @@ int main(int argc, char **argv) {
            "\ttime ordered. \n");
     return 1;
   }
+  
+  char *path = getenv("GEBSYS");
+  std::string calfile; calfile.assign(path); calfile.append("/util/mycal.cal");
+  TChannel::ReadCalFile(calfile.c_str());
 
   TGEBMultiFile multi;
   Long_t First1 = 0; 
@@ -89,7 +95,7 @@ int main(int argc, char **argv) {
 
   while(run) {
     loopcounter++;
-    //if(loopcounter > 1000)
+    //if(loopcounter > 100000)
     //  break;
     try {
       bytes = multi.Read(event);

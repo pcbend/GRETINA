@@ -33,6 +33,7 @@ endif
 
 LIBS =  -lTGRUTint
 LIBS += -lGEBFormat
+LIBS += -lGEBUtil
 #LIBS += -lG2Format
 #LIBS += -lPWFormat
 #LIBS += -lLaBrFormat

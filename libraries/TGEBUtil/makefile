@@ -1,5 +1,5 @@
 
-OBJECTS = TChannel.o 
+OBJECTS = TChannel.o TGEBUtilDict.o 
 INCDIR = $(BASE)/include
 DICTOBJ = $(INCDIR)/TChannel.h 
 DICTNAM = TGEBUtil

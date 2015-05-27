@@ -45,7 +45,10 @@ class LaBrFragment : public TObject {
     inline void        SetTDCRef(const int &tdc_ref) { fTdcReference = tdc_ref; }
 
 
-    const inline Int_t GetAddress(const int &i) { return ((fType<<24)+(fSegments.at(i).ID())); }
+    const inline Int_t GetAddress(const int &i) { return (((int)(fType<<24))+((int)(fSegments.at(i).ID()))); }
+    //printf("(fSegments.at(%i).ID() = %i\n",i,fSegments.at(i).ID());
+     
+     
 
   private:
     Int_t   fType;

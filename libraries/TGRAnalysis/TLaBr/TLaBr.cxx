@@ -3,6 +3,7 @@
 #include <TLaBr.h>
 #include <LaBrFragment.h>
 
+#include <TChannel.h>
 
 ClassImp(TLaBr)
 
@@ -26,9 +27,13 @@ TLaBr::~TLaBr() {  }
 
 void TLaBr::Set(LaBrFragment &frag) {
    Clear(); 
+   TChannel *chan = 0;
    for(int x=0;x<frag.Size();x++) {
      TLaBrHit hit(frag.Get(x));
      hit.SetAddress(frag.GetAddress(x));
+     chan=TChannel::GetChannel(hit.GetAddress());
+     if(chan)
+       hit.SetEnergy(chan->CalibrateENG(hit.GetCharge()));
      hit.SetTimeStamp(frag.GetTimeStamp());
      hit.SetTDCRef(frag.GetTDCRef());
      if(hit.IsValid())

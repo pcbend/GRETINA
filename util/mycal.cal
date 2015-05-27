@@ -1,0 +1,330 @@
+
+
+CRYID36 {
+  ADDRESS:  0x01002424 
+  TYPE:     quad6
+  NUMBER:   36
+  ENGCOEFF:  0.01568731      1.00026309
+  ENGCHI2:  1.0
+}
+CRYID37 {
+  ADDRESS:  0x01002524 
+  TYPE:     quad6
+  NUMBER:   37
+  ENGCOEFF: -0.04250665      1.00036097
+  ENGCHI2:  1.0
+}
+CRYID38 {
+  ADDRESS:  0x01002624 
+  TYPE:     quad6
+  NUMBER:   38
+  ENGCOEFF: -0.05094768      1.00046206
+  ENGCHI2:  1.0
+}
+CRYID39 {
+  ADDRESS:  0x01002724 
+  TYPE:     quad6
+  NUMBER:   39
+  ENGCOEFF:  0.00990317      1.00022459
+  ENGCHI2:  1.0
+}
+
+CRYID64 {
+  ADDRESS:  0x01004024 
+  TYPE:     quad4
+  NUMBER:   64
+  ENGCOEFF: -0.05037981      1.00044775
+  ENGCHI2:  1.0
+}
+CRYID65 {
+  ADDRESS:  0x01004124 
+  TYPE:     quad4
+  NUMBER:   65
+  ENGCOEFF: -0.01657075      1.00037050
+  ENGCHI2:  1.0
+}
+CRYID66 {
+  ADDRESS:  0x01004224 
+  TYPE:     quad4
+  NUMBER:   66
+  ENGCOEFF:  0.04829703      1.00035238
+  ENGCHI2:  1.0
+}
+CRYID67 {
+  ADDRESS:  0x01004324 
+  TYPE:     quad4
+  NUMBER:   67
+  ENGCOEFF: -0.03478620      1.00022554
+  ENGCHI2:  1.0
+}
+
+CRYID68 {
+  ADDRESS:  0x01004424 
+  TYPE:     quad3
+  NUMBER:   68
+  ENGCOEFF:  0.03886018      1.00035501
+  ENGCHI2:  1.0
+}
+CRYID69 {
+  ADDRESS:  0x01004524 
+  TYPE:     quad3
+  NUMBER:   69
+  ENGCOEFF: -0.01338830      1.00013733
+  ENGCHI2:  1.0
+}
+CRYID70 {
+  ADDRESS:  0x01004624 
+  TYPE:     quad3
+  NUMBER:   70
+  ENGCOEFF:  0.01989025      1.00026929
+  ENGCHI2:  1.0
+}
+CRYID71 {
+  ADDRESS:  0x01004724 
+  TYPE:     quad3
+  NUMBER:   71
+  ENGCOEFF:  0.03968935      1.00039721
+  ENGCHI2:  1.0
+}
+
+CRYID76 {
+  ADDRESS:  0x01004c24 
+  TYPE:     quad7
+  NUMBER:   76
+  ENGCOEFF:  0.01081530      0.99977928
+  ENGCHI2:  1.0
+}
+CRYID77 {
+  ADDRESS:  0x01004d24 
+  TYPE:     quad7
+  NUMBER:   77
+  ENGCOEFF:  0.03842233      1.00019085
+  ENGCHI2:  1.0
+}
+CRYID78 {
+  ADDRESS:  0x01004e24 
+  TYPE:     quad7
+  NUMBER:   78
+  ENGCOEFF: -0.05735359      1.00015318
+  ENGCHI2:  1.0
+}
+CRYID79 {
+  ADDRESS:  0x01004f24 
+  TYPE:     quad7
+  NUMBER:   79
+  ENGCOEFF: -0.00218326      1.00031149
+  ENGCHI2:  1.0
+}
+
+CRYID96 {
+  ADDRESS:  0x01006024 
+  TYPE:     quad1
+  NUMBER:   96
+  ENGCOEFF: -0.01052277      1.000209331.0   
+  ENGCHI2:  1.0
+}
+
+
+CRYID97 {
+  ADDRESS:  0x01006124 
+  TYPE:     quad1
+  NUMBER:   97
+  ENGCOEFF: -0.02884400      1.00068176
+  ENGCHI2:  1.0
+}
+CRYID98 {
+  ADDRESS:  0x01006224 
+  TYPE:     quad1
+  NUMBER:   98
+  ENGCOEFF: -0.03076284      1.00043535
+  ENGCHI2:  1.0
+}
+CRYID99 {
+  ADDRESS:  0x01006324 
+  TYPE:     quad1
+  NUMBER:   99
+  ENGCOEFF: -0.00580778      1.00030601
+  ENGCHI2:  1.0
+}
+
+CRYID100 {
+  ADDRESS:  0x01006424 
+  TYPE:     quad5
+  NUMBER:   100
+  ENGCOEFF: -0.01140626      1.00049794
+  ENGCHI2:  1.0
+}
+CRYID101 {
+  ADDRESS:  0x01006524 
+  TYPE:     quad5
+  NUMBER:   101
+  ENGCOEFF: -0.04466838      1.00086296
+  ENGCHI2:  1.0
+}
+CRYID102 {
+  ADDRESS:  0x01006624 
+  TYPE:     quad5
+  NUMBER:   102
+  ENGCOEFF:  0.02763985      1.00060725
+  ENGCHI2:  1.0
+}
+CRYID103 {
+  ADDRESS:  0x01006724 
+  TYPE:     quad5
+  NUMBER:   103
+  ENGCOEFF: -0.02822882      0.99979395
+  ENGCHI2:  1.0
+}
+
+CRYID112 {
+  ADDRESS:  0x01007024 
+  TYPE:     quad2
+  NUMBER:   112
+  ENGCOEFF:  0.01662591      0.99988139
+  ENGCHI2:  1.0
+}
+CRYID113 {
+  ADDRESS:  0x01007124 
+  TYPE:     quad2
+  NUMBER:   113
+  ENGCOEFF: 0.03113018      0.99996901
+  ENGCHI2:  1.0
+}
+CRYID114 {
+  ADDRESS:  0x01007224 
+  TYPE:     quad2
+  NUMBER:   114
+  ENGCOEFF: -0.01886476      0.99995875
+  ENGCHI2:  1.0
+}
+CRYID115 {
+  ADDRESS:  0x01007324 
+  TYPE:     quad2
+  NUMBER:   115
+  ENGCOEFF: -0.03537647      0.99998856
+  ENGCHI2:  1.0
+}
+
+
+CRYID116 {
+  ADDRESS:  0x01007424 
+  TYPE:     quad8
+  NUMBER:   116
+  ENGCOEFF:  0.02537071      1.00008893
+  ENGCHI2:  1.0
+}
+CRYID117 {
+  ADDRESS:  0x01007524 
+  TYPE:     quad8
+  NUMBER:   117
+  ENGCOEFF: -0.00407949      1.00024486
+  ENGCHI2:  1.0
+}
+CRYID118 {
+  ADDRESS:  0x01007624 
+  TYPE:     quad8
+  NUMBER:   118
+  ENGCOEFF: -0.00586956      1.00022876
+  ENGCHI2:  1.0
+}
+CRYID119 {
+  ADDRESS:  0x01007724 
+  TYPE:     quad8
+  NUMBER:   119
+  ENGCOEFF: 0.03064005      1.00019014
+  ENGCHI2:  1.0
+}
+
+     
+/////////////////////////////////////////     
+/////////////////////////////////////////     
+//////////      LaBr     ////////////////     
+/////////////////////////////////////////     
+/////////////////////////////////////////     
+
+
+LABR1 {
+  ADDRESS:  0x12000001 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR2 {
+  ADDRESS:  0x12000002 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR3 {
+  ADDRESS:  0x12000003 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR4 {
+  ADDRESS:  0x12000004 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR5 {
+  ADDRESS:  0x12000005 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR6 {
+  ADDRESS:  0x12000006 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR7 {
+  ADDRESS:  0x12000007 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR8 {
+  ADDRESS:  0x12000008 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+LABR9 {
+  ADDRESS:  0x12000009 
+  TYPE:     labr
+  NUMBER:   1
+  ENGCOEFF: 0.0 1.0
+  ENGCHI2:  1.0
+}
+
+
+/////////////////////////////////////////     
+/////////////////////////////////////////     
+//////////    PhosWall   ////////////////     
+/////////////////////////////////////////     
+/////////////////////////////////////////     
+
+
+
+
+
+
+

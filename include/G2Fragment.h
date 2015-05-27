@@ -30,7 +30,7 @@ class G2Fragment : public TObject {
     void Clear(Option_t *opt ="");                             ///      GEB   Cry   SEG       
     void Print(Option_t *opt ="") const;                       ///      Type  ID    Id              Seg  = 0-35 
                                                                ///  0xf  ff   fff   ff              Core =  36
-    const inline Int_t    GetAddress()                { return ((fType<<24)+(fCrystal<<8)) + 36  ; }
+    const inline Int_t    GetAddress()                { return ((fType<<24)+(fCrystal<<8) + 36 ); }
       
     const inline Int_t   &GetCrystalNumber()          { return fCrystal; }
     const inline Int_t   &GetNumberOfHits()           { return fNumberHits;  }

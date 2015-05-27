@@ -35,6 +35,7 @@ class TLaBrHit : public TObject {
     void SetTimeStamp(const Long_t &ts)  { fTimeStamp = ts; }  
     void SetTDCRef(const Int_t &tdc_ref) { fRefTdc = tdc_ref; }  
     void SetAddress(const Int_t &add)    { fAddress = add;  }
+    void SetEnergy(const Float_t &eng)   { fEnergy = eng; }
 
     bool IsValid();
 

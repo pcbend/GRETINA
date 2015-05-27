@@ -62,7 +62,7 @@ TGretinaHit::TGretinaHit(G2Fragment &frag) {
   beam_direction.SetXYZ(0,0,1);  
   Clear(); 
 
-  fAddress        =   frag.GetAddress();
+  fAddress        =   frag.GetAddress(); 
   fTimeStamp      =   frag.GetTimeStamp();
   fWalkCorrection =   frag.GetWalkCorrection();
 

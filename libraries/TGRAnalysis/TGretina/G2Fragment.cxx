@@ -37,7 +37,8 @@ void G2Fragment::Copy(const G2Fragment &rhs) {
 
 void G2Fragment::Copy(const TGEBEvent::TGEBBankType1 &rhs) {
   Clear();
-  fType            =  rhs.type;
+  //std::cout << rhs;
+  fType            =  01; //rhs.type;
   fCrystal         =  rhs.crystal_id;;
   fNumberHits      =  rhs.num;
   fTotalE          =  rhs.tot_e;
