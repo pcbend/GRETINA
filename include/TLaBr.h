@@ -25,6 +25,8 @@ class TLaBr : public TObject {
     void Print(Option_t *opt = "") const;
     void Clear(Option_t *opt = "");
 
+    inline const int Size()  { return labr_hits.size(); }
+
     static TVector3 FindPosition(int cryId);
 
 
