@@ -513,9 +513,9 @@ void TPhosWall::SetCalMaps() {
   std::string fMapAfile = getenv("GEBSYS");
   std::string fMapBfile = getenv("GEBSYS");
   std::string fMapCfile = getenv("GEBSYS");
-  fMapAfile.append("/libraries/TGRAnalysis/TPhosWall/Acoeff.cal");//-322-8x8.xy");
-  fMapBfile.append("/libraries/TGRAnalysis/TPhosWall/Bcoeff.cal");//-322-8x8.xy");
-  fMapCfile.append("/libraries/TGRAnalysis/TPhosWall/Ccoeff.cal");//-322-8x8.xy");
+  fMapAfile.append("/libraries/TGRAnalysis/TPhosWall/Acoeff-322-8x8.xy");
+  fMapBfile.append("/libraries/TGRAnalysis/TPhosWall/Bcoeff-322-8x8.xy");
+  fMapCfile.append("/libraries/TGRAnalysis/TPhosWall/Ccoeff-322-8x8.xy");
   //printf("fMapAfile = %s\n",fMapAfile.c_str());
 
   std::string fMapBDiffFile = getenv("GEBSYS");
