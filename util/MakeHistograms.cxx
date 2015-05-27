@@ -171,6 +171,15 @@ int main(int argc,char **argv) {
 
       }
 
+      
+         hname.assign("Gretina_PhosWall_Time");
+         hist = (TH1F*)misc_list->FindObject(hname.c_str());
+         if(!hist) {
+           hist = new TH1F(hname.c_str(),hname.c_str(),2000,-1000,1000);
+           misc_list->Add(hist);
+         }
+         hist->Fill(ghit->GetTime()-phoswall->GetTimeStamp());
+
 
 
     }
@@ -241,7 +250,7 @@ int main(int argc,char **argv) {
       hname.assign("Labr_LabEnergy_Total");
       hist = (TH1F*)labr_list->FindObject(hname.c_str());
       if(!hist) {
-        hist = new TH2F(hname.c_str(),hname.c_str(),4000,0,8000);
+        hist = new TH1F(hname.c_str(),hname.c_str(),4000,0,8000);
         labr_list->Add(hist);
       }
       hist->Fill(lhit->GetEnergy());

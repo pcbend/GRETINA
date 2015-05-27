@@ -81,6 +81,7 @@ class TPhosWall : public TObject {
 
     Int_t Multiplicity() { return fMultiplicity; }
 
+    inline const Long_t GetTimeStamp() { return fTimeStamp; }
 
   private:
     //std::vector<PWFragment> PhosWallHits;
