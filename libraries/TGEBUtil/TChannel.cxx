@@ -712,13 +712,13 @@ Int_t TChannel::ParseInputData(const char *inputdata,Option_t *opt) {
             } else if(type.compare("TYPE")==0) {
                channel->SetTypeName(line.c_str());
             } else if(type.compare("ADDRESS")==0) {
-               unsigned int tempadd =0; ss>>tempadd;
+               int tempadd =0; ss>>tempadd;
                if(tempadd == 0) { //maybe it is in hex...
                   std::stringstream newss;
                   newss << std::hex << line;
                   newss >> tempadd;
                }
-               tempadd = tempadd &0x00ffffff; //front end number is not included in the odb...
+               tempadd = tempadd &0xffffffff; 
                channel->SetAddress(tempadd);
             } else if(type.compare("NUMBER")==0) {
                int tempnum; ss>>tempnum;
