@@ -172,13 +172,13 @@ int main(int argc,char **argv) {
       }
 
       
-         hname.assign("Gretina_PhosWall_Time");
+         hname.assign("PhosWall_Gretina_Time");
          hist = (TH1F*)misc_list->FindObject(hname.c_str());
          if(!hist) {
            hist = new TH1F(hname.c_str(),hname.c_str(),2000,-1000,1000);
            misc_list->Add(hist);
          }
-         hist->Fill(ghit->GetTime()-phoswall->GetTimeStamp());
+         hist->Fill(phoswall->GetTimeStamp()-ghit->GetTime());
 
 
 
