@@ -4,6 +4,8 @@
 #include <TObject.h>
 #include <TMath.h>
 
+#include <TClonesArray.h>
+
 #include <G2Fragment.h>
 #include <G2Segment.h>
 
@@ -15,7 +17,7 @@ class TGretina : public TObject {
     TGretina();
     ~TGretina();
 
-    void AddGretinaHit(TGretinaHit &hit)   { gretina_hits.push_back(hit); }
+    void AddGretinaHit(TGretinaHit &hit);   //{ gretina_hits.push_back(hit); }
     inline const int NumberOfGretinaHits() { return gretina_hits.size(); }//GretinaHits.size(); }
     TGretinaHit *GetHit(const int &i)      { return &gretina_hits.at(i); }
     inline const int NumberOfAddbackHits() { return addback_hits.size(); }//GretinaHits.size(); }
@@ -31,16 +33,18 @@ class TGretina : public TObject {
                                  Float_t localX=0,Float_t localY=0,Float_t localZ=0);
 
   private:
-    std::vector<TGretinaHit> gretina_hits;
-    std::vector<TGretinaHit> addback_hits;
+    //std::vector<TGretinaHit> gretina_hits;
+    //std::vector<TGretinaHit> addback_hits;
     //std::vector<TGretinaHit> tracked_hits;
+    TClonesArray gretina_hits("TGretinaHits");
+    TClonesArray addback_hits("TGretinaHits");
 
     static Float_t crmat[32][4][4][4];
     static void SetCRMAT();
     static bool fCRMATSet;
 
 
-  ClassDef(TGretina,1);
+  ClassDef(TGretina,3);
 };
 
 

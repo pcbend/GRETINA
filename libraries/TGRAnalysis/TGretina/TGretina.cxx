@@ -46,8 +46,8 @@ void TGretina::BuildAddBack() {
 void TGretina::Print(Option_t *opt) { }
 
 void TGretina::Clear(Option_t *opt) {
-   gretina_hits.clear();
-   addback_hits.clear();
+   gretina_hits.Clear();
+   addback_hits.Clear();
    //tracked_hits.clear();
 }
 

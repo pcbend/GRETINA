@@ -8,6 +8,10 @@
 
 #include <cmath>
 
+#include "TGEBEvent.h"
+
+#define MAXHPGESEGMENTS 32
+
 class G2Fragment;
 
 class TGretinaHit : public TObject {
@@ -15,7 +19,11 @@ class TGretinaHit : public TObject {
   public:
     TGretinaHit();
     TGretinaHit(G2Fragment&);
+    TGretinaHit(TGEBEvent&);
     ~TGretinaHit();
+
+    void Copy(const TGEBEvent::TGEBBankType1 &rhs);
+
 
     inline Double_t GetTime()       { return (double)fTimeStamp - (double)fWalkCorrection; }
     inline Int_t    GetAddress()    { return fAddress;    }
@@ -25,7 +33,7 @@ class TGretinaHit : public TObject {
 
     void  Print(Option_t *opt="");
     void  Clear(Option_t *opt="");
-    const Int_t Size()  { return fSegmentNumber.size(); }
+    const Int_t Size()  { return fNumberOfSegments; }//fSegmentNumber.size(); }
 
     TVector3 &GetPosition() { 
        //printf("fFirstInteraction =  %i |  fInteractionPosition.size() = %i \n",
@@ -43,7 +51,7 @@ class TGretinaHit : public TObject {
     inline double GetThetaDeg() { return GetTheta()*TMath::RadToDeg(); }
 
 
-    inline bool CheckPosition() { if(fInteractionPosition.size()>0) return true; return false; }
+    inline bool CheckPosition() { /*printf("fNumberOfSegments = %i\n",fNumberOfSegments);*/ if(fNumberOfSegments>0) return true; return false; }
     bool CheckAddback(TGretinaHit&);
 
     TGretinaHit& operator+=(const TGretinaHit&);
@@ -68,10 +76,10 @@ class TGretinaHit : public TObject {
    
    inline Int_t   GetFirstInteraction()   { return fFirstInteraction;     }
    inline Int_t   GetSecondInteraction() { return fSecondInteraction;    }
-   inline Int_t   NumberOfSegments() { return fSegmentNumber.size(); }
-   inline Int_t   GetSegmentId(const int &i)  { return fSegmentNumber.at(i); }
-   inline Float_t GetSegmentEng(const int &i) { return fSegmentEnergy.at(i); }
-   inline TVector3 GetInteractionPosition(const int &i) { return fInteractionPosition.at(i); }
+   inline Int_t   NumberOfSegments() { return fNumberOfSegments; }
+   inline Int_t   GetSegmentId(const int &i)  { return fSegmentNumber[i]; }
+   inline Float_t GetSegmentEng(const int &i) { return fSegmentEnergy[i]; }
+   inline TVector3 GetInteractionPosition(const int &i) { return fInteractionPosition[i]; }
 
    //void SetPosition(TVector3 &vec) { fCorePosition = vec; } 
 
@@ -85,7 +93,7 @@ class TGretinaHit : public TObject {
     Int_t   fCoreCharge;
 
     TVector3 fCorePosition;
-    Float_t  fCurrentTime;
+    //Float_t  fCurrentTime;
 
     Int_t   fFirstInteraction;
     Int_t   fSecondInteraction;
@@ -93,14 +101,20 @@ class TGretinaHit : public TObject {
     static  Float_t fFirstSegmentValue;    
     static  Float_t fSecondSegmentValue;   
 
+    Int_t   fNumberOfSegments;
+
     //std::vector<Int_t>    fSegmentAddress;
-    std::vector<Int_t>    fSegmentNumber;
-    std::vector<TVector3> fInteractionPosition;
-    std::vector<Float_t>  fSegmentEnergy;
+    //std::vector<Int_t>    fSegmentNumber;
+    //std::vector<TVector3> fInteractionPosition;
+    //std::vector<Float_t>  fSegmentEnergy;
+
+    Int_t    fSegmentNumber[MAXHPGESEGMENTS];
+    TVector3 fInteractionPosition[MAXHPGESEGMENTS];
+    Float_t  fSegmentEnergy[MAXHPGESEGMENTS];
 
     static TVector3 beam_direction; //!
 
-  ClassDef(TGretinaHit,1)
+  ClassDef(TGretinaHit,3)
 
 };
 

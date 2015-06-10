@@ -47,7 +47,6 @@ typedef struct { // Decomposed GRETINA Data
    TGEBGeSegType1 intpts[MAX_INTPTS];
 }__attribute__((__packed__)) TGEBBankType1;
 
-
 friend std::ostream& operator<<(std::ostream& os, const TGEBEvent::TGEBBankType1 &bank);
 
 
@@ -66,8 +65,6 @@ typedef struct{
    TPWHit hit[MAX_PWID];
    Short_t nhits;       //int16_t   -> not actually part of the bank recorded to file.
 }__attribute__((__packed__)) TPWBank;
-
-
 
 friend std::ostream& operator<<(std::ostream& os,const TGEBEvent::TPWBank &bank);
 

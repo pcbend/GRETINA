@@ -126,8 +126,8 @@ int main(int argc, char **argv) {
 
     switch(event->GetEventType()) {
       case 1: {
-        G2Fragment frag(*event);
-        TGretinaHit hit(frag);
+        //G2Fragment frag(*event);
+        TGretinaHit hit(*event);
         gretina->AddGretinaHit(hit);
         gretcounter++;
       }
