@@ -47,20 +47,21 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
    Int_t fLargestValue = 0;
    fLargestHit = 0; //frag.GetLargestNumber();
 
-   for(unsigned int x=0;x<frag.GetNumberOfHits();x++) {
+   int x = 0;
+   for(x=0;x<frag.GetNumberOfHits();x++) {
       fAddress.push_back(frag.Address(x));
-      fACharge.push_back(frag.GetSegment(x).A());
-      fBCharge.push_back(frag.GetSegment(x).B());
-      fCCharge.push_back(frag.GetSegment(x).C());
-      fPixel.push_back(frag.GetSegment(x).Pixel());
-      fTime.push_back(frag.GetSegment(x).Time());
+      fACharge.push_back(frag.GetSegment((unsigned int&)x).A());
+      fBCharge.push_back(frag.GetSegment((unsigned int&)x).B());
+      fCCharge.push_back(frag.GetSegment((unsigned int&)x).C());
+      fPixel.push_back(frag.GetSegment((unsigned int&)x).Pixel());
+      fTime.push_back(frag.GetSegment((unsigned int&)x).Time());
       if(fPixel.back()>-1&&fPixel.back()<256) {
          //printf("here1,  %i  \n",fPixel.back());
          //printf("here2,  0x%08x  \n",fWallPositions[fPixel.back()]);
          fPosition.push_back(*fWallPositions[fPixel.back()]);
       }
       else
-         fPosition.push_back(frag.GetSegment(x).Position());
+         fPosition.push_back(frag.GetSegment((unsigned int&)x).Position());
 
       //if(B(x)>fLargestValue) {
       if(fBCharge.back()>fLargestValue) {
@@ -68,6 +69,7 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
          fLargestHit=x;
       }
    }
+   //printf(" Added %i PhosWall hits.\n",x);
 }
 
 /*

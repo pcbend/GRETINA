@@ -143,6 +143,28 @@ void TGretinaHit::Copy(const TGEBEvent::TGEBBankType1 &rhs) {
   }
 }
 
+void TGretinaHit::Copy(const TGretinaHit &rhs) {
+  Clear();
+  fAddress        = rhs.fAddress; 
+  fTimeStamp      = rhs.fTimeStamp;
+  fWalkCorrection = rhs.fWalkCorrection; 
+  fCrystalId      = rhs.fCrystalId;
+  fCoreEnergy     = rhs.fCoreEnergy;
+  
+  fCoreCharge     = rhs.fCoreCharge;
+
+  fNumberOfSegments = rhs.fNumberOfSegments; //fNumberHits;  
+
+  fFirstInteraction  = rhs.fFirstInteraction;
+  fSecondInteraction = rhs.fSecondInteraction;
+
+  for(int x=0;x<fNumberOfSegments;x++) {
+    fSegmentNumber[x]       = rhs.fSegmentNumber[x];
+    fInteractionPosition[x] = rhs.fInteractionPosition[x];
+    fSegmentEnergy[x]       = rhs.fSegmentEnergy[x];
+  }
+
+}
 
 
 void TGretinaHit::Print(Option_t *opt) { }

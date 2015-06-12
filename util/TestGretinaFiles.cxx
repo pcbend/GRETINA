@@ -52,6 +52,9 @@ int main(int argc, char **argv) {
   TGEBEvent *event = new TGEBEvent;
   size_t bytes = multi.Read(event);
   if(bytes<1) {
+    bytes = multi.Read(event);
+  }
+  if(bytes<1) {
      printf("problem reading inputfiles.\n");
      return 1;
   }
@@ -110,9 +113,9 @@ int main(int argc, char **argv) {
     switch(event->GetEventType()) {
       case 1: {
        //printf("\tfound gretina bank 1\n");
-//       std::cout << *((TGEBEvent::TGEBBankType1*)event->GetData());
+       std::cout << *((TGEBEvent::TGEBBankType1*)event->GetData());
         G2Fragment frag(*event);
-        frag.Print();
+        //frag.Print();
         //TGretinaHit hit(frag);
         //gretina->AddGretinaHit(hit);
         gretcounter++;
@@ -121,7 +124,9 @@ int main(int argc, char **argv) {
       case 17: {
         PWFragment frag(*event);
         frag.Print();
-        //phoswall->AddPWHit(frag);
+        phoswall->AddPWHit(frag);
+        if(phoswall->GetTime()<0)
+          printf(RED "\tFIRE\t%i\n" RESET_COLOR,phoswall->Size());
         phoscounter++;
       }
       break;

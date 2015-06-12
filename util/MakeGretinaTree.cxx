@@ -57,6 +57,9 @@ int main(int argc, char **argv) {
   TGEBEvent *event = new TGEBEvent;
   size_t bytes = multi.Read(event);
   if(bytes < 1) {
+    bytes = multi.Read(event);
+  }
+  if(bytes < 1) {
      printf("problem reading inputfiles.\n");
      return 1;
   }
@@ -113,7 +116,7 @@ int main(int argc, char **argv) {
     if(abs(event->GetTimeStamp()-LastTime)>500) {  // 5 us build time.
       //printf( DRED "build "  RESET_COLOR "\n");
       phoswall->FindWeightedPosition();
-      gretina->BuildAddBack();
+      //gretina->BuildAddBack();
      
       //phoswall->GetPosition().Print();
 

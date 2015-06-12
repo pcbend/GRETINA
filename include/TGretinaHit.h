@@ -22,7 +22,8 @@ class TGretinaHit : public TObject {
     TGretinaHit(TGEBEvent&);
     ~TGretinaHit();
 
-    void Copy(const TGEBEvent::TGEBBankType1 &rhs);
+    void Copy(const TGEBEvent::TGEBBankType1&);
+    void Copy(const TGretinaHit&);
 
 
     inline Double_t GetTime()       { return (double)fTimeStamp - (double)fWalkCorrection; }

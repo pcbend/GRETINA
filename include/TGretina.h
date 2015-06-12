@@ -18,10 +18,10 @@ class TGretina : public TObject {
     ~TGretina();
 
     void AddGretinaHit(TGretinaHit &hit);   //{ gretina_hits.push_back(hit); }
-    inline const int NumberOfGretinaHits() { return gretina_hits.size(); }//GretinaHits.size(); }
-    TGretinaHit *GetHit(const int &i)      { return &gretina_hits.at(i); }
-    inline const int NumberOfAddbackHits() { return addback_hits.size(); }//GretinaHits.size(); }
-    TGretinaHit *GetAddbackHit(const int &i) { return &addback_hits.at(i); }
+    inline const int NumberOfGretinaHits() { return gretina_hits.GetEntries(); }  //size(); }//GretinaHits.size(); }
+    TGretinaHit *GetHit(const int &i)      { return (TGretinaHit*)gretina_hits.At(i); }
+    inline const int NumberOfAddbackHits() { return addback_hits.GetEntries(); }  //.size(); }//GretinaHits.size(); }
+    TGretinaHit *GetAddbackHit(const int &i) { return (TGretinaHit*)addback_hits.At(i); }
 
 
     void Print(Option_t *opt = "");
@@ -36,8 +36,8 @@ class TGretina : public TObject {
     //std::vector<TGretinaHit> gretina_hits;
     //std::vector<TGretinaHit> addback_hits;
     //std::vector<TGretinaHit> tracked_hits;
-    TClonesArray gretina_hits("TGretinaHits");
-    TClonesArray addback_hits("TGretinaHits");
+    TClonesArray gretina_hits;//("TGretinaHit");
+    TClonesArray addback_hits;//("TGretinaHit");
 
     static Float_t crmat[32][4][4][4];
     static void SetCRMAT();

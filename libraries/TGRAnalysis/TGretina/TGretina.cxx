@@ -10,7 +10,9 @@ ClassImp(TGretina)
 TGretina::TGretina() { 
    if(!fCRMATSet)
      SetCRMAT();
-   Clear(); 
+   gretina_hits.SetClass("TGretinaHit");
+   addback_hits.SetClass("TGretinaHit");
+   //Clear(); 
 }
 
 TGretina::~TGretina() {  }
@@ -20,34 +22,43 @@ Float_t TGretina::crmat[32][4][4][4];
 bool TGretina::fCRMATSet = false;
 
 
+void TGretina::AddGretinaHit(TGretinaHit &hit) {
+  TGretinaHit *newhit = (TGretinaHit*)gretina_hits.ConstructedAt(NumberOfGretinaHits());
+  newhit->Copy(hit);
+
+}
 
 void TGretina::BuildAddBack() {
-  if(gretina_hits.size()==0)
+  if(NumberOfGretinaHits()==0)
      return;
-  addback_hits.clear();
-  addback_hits.push_back(gretina_hits.at(0));
-  if(gretina_hits.size()==1) 
+  addback_hits.Clear();
+  //addback_hits.push_back(gretina_hits.at(0));
+  TGretinaHit *newhit = (TGretinaHit*)addback_hits.ConstructedAt(0);
+  newhit->Copy((TGretinaHit&)(*GetAddbackHit(0)));
+
+  if(NumberOfGretinaHits()==1) 
     return;
 
-
-  for(int x=1;x<gretina_hits.size();x++) {
+  for(int x=1;x<NumberOfGretinaHits();x++) {
     bool used = false;
-    for(int y=0;y<addback_hits.size();y++) {
-      if(addback_hits.at(y).CheckAddback(gretina_hits.at(x))) {
+    for(int y=0;y<addback_hits.GetEntries();y++) {
+      if(((TGretinaHit*)addback_hits.At(y))->CheckAddback((TGretinaHit&)(*gretina_hits.At(x)))) {
         used = true;
-        addback_hits.at(y) += gretina_hits.at(x);
+        ((TGretinaHit&)(*addback_hits.At(y))) += ((TGretinaHit&)(*gretina_hits.At(x)));
       }
     }
-    if(!used)
-       addback_hits.push_back(gretina_hits.at(x));
+    if(!used) {
+      TGretinaHit *tmphit = (TGretinaHit*)addback_hits.ConstructedAt(addback_hits.GetEntries());
+      tmphit->Copy((TGretinaHit&)(*gretina_hits.At(x)));
+    }
   }
 };
 
 void TGretina::Print(Option_t *opt) { }
 
 void TGretina::Clear(Option_t *opt) {
-   gretina_hits.Clear();
-   addback_hits.Clear();
+   gretina_hits.Clear("C");
+   addback_hits.Clear("C");
    //tracked_hits.clear();
 }
 
