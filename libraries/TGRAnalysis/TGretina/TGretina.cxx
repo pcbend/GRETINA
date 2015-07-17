@@ -34,7 +34,7 @@ void TGretina::BuildAddBack() {
   addback_hits.Clear();
   //addback_hits.push_back(gretina_hits.at(0));
   TGretinaHit *newhit = (TGretinaHit*)addback_hits.ConstructedAt(0);
-  newhit->Copy((TGretinaHit&)(*GetAddbackHit(0)));
+  newhit->Copy((TGretinaHit&)(*GetHit(0)));
 
   if(NumberOfGretinaHits()==1) 
     return;

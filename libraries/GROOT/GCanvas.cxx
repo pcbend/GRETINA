@@ -112,6 +112,8 @@ void GCanvas::GCanvasInit() {
    //this->SetCrosshair(true);
 }
 
+
+
 void GCanvas::AddMarker(int x,int y,int dim) {
   GMarker *mark = new GMarker();
   mark->x = x;
@@ -279,7 +281,7 @@ void GCanvas::UpdateStatsInfo(int x, int y) {
 void GCanvas::Draw(Option_t *opt) {
    printf("GCanvas Draw was called.\n");
    TCanvas::Draw(opt);
-   this->FindObject("TFrame")->SetBit(TBox::kCannotMove);
+   //this->FindObject("TFrame")->SetBit(TBox::kCannotMove);
 }
 
 
@@ -587,6 +589,11 @@ bool GCanvas::HandleKeyboardPress(Event_t *event,UInt_t *keysym) {
             edit = true;
             break;
          */
+         case kKey_F3: {
+            //GUICalibrate152Eu(hists.at(0));     
+         }
+         break;
+
          case kKey_F10:{
             std::ofstream outfile;
             for(int i=0;i<hists.back()->GetListOfFunctions()->GetSize();i++) {

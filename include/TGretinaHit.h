@@ -62,15 +62,12 @@ class TGretinaHit : public TObject {
       if(Size()<1)
          return 0.0;
       bool madevec = false;
-      //int gid = fCrystalId;
       if(vec==0) {
          vec = &beam_direction;
       }
-      double tmp = 0;
-      //if(beta != 0.00) {
+      double tmp = 0.0;
       double gamma = 1/(sqrt(1-pow(beta,2)));
       tmp = fCoreEnergy*gamma *(1 - beta*TMath::Cos(GetPosition().Angle(*vec)));
-      //}
       return tmp;
    }
 

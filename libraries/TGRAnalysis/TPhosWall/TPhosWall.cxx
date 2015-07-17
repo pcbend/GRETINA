@@ -16,6 +16,7 @@
 ClassImp(TPhosWall)
 
 
+TVector3 *TPhosWall::beam = new TVector3(0,0,1);
 int TPhosWall::fHitPatternCounter=0;
 
 
@@ -31,16 +32,89 @@ std::map<int,int> TPhosWall::fBDiffMap;
 
 
 TPhosWall::TPhosWall() { 
-   Clear(); 
+  fPosition = 0;
+  fAddress = 0; 
+  fACharge = 0; 
+  fBCharge = 0; 
+  fCCharge = 0; 
+  fPixel = 0;   
+  fTime = 0;    
+
+  if(!fPositionsSet)
+    SetWallPositions();
+  if(!fCalMapsSet)
+    SetCalMaps();
+
+}
+
+TPhosWall::~TPhosWall() { Clear();  }
+
+
+TPhosWall::TPhosWall(TGEBEvent &event) {
+  fPosition = 0;
+  fAddress = 0; 
+  fACharge = 0; 
+  fBCharge = 0; 
+  fCCharge = 0; 
+  fPixel = 0;   
+  fTime = 0;    
+
+  if(!fPositionsSet)
+     SetWallPositions();
+  if(!fCalMapsSet)
+     SetCalMaps();
+  Copy(event);
+}
+
+
+
+void TPhosWall::Copy(const TGEBEvent &event) {
+  Clear(); 
    if(!fPositionsSet)
       SetWallPositions();
    if(!fCalMapsSet)
       SetCalMaps();
 
+  fTimeStamp = event.GetTimeStamp();
+  Int_t fLargestValue = 0;
+  fLargestHit         = 0; 
+  fNumberOfHits       = 0;
+  int x               = 0;
+  
+  //fNumberOfHits = event.GetDataSize()/sizeof(TGEBEvent::TPWHit); 
+  int hitsize = event.GetDataSize()/sizeof(TGEBEvent::TPWHit); 
+  fPosition = new TVector3[hitsize]; 
+  fAddress  = new Int_t[hitsize];  
+  fACharge  = new Short_t[hitsize];  
+  fBCharge  = new Short_t[hitsize];  
+  fCCharge  = new Short_t[hitsize];  
+  fPixel    = new Short_t[hitsize];      
+  fTime     = new Short_t[hitsize];       
+
+  //printf("Memory set.\n");
+
+  for(int x=0;x<event.GetDataSize();x+=sizeof(TGEBEvent::TPWHit)) {
+    TGEBEvent::TPWHit *hit = ((TGEBEvent::TPWHit*)(event.GetData()+x));
+    if(fNumberOfHits==hitsize)
+       break;
+    fACharge[fNumberOfHits]  = hit->data_a; 
+    fBCharge[fNumberOfHits]  = hit->data_b; 
+    fCCharge[fNumberOfHits]  = hit->data_c; 
+    fPixel[fNumberOfHits]    = hit->pix_id;
+    fTime[fNumberOfHits]     = hit->time;
+    fAddress[fNumberOfHits]  = ((int)(event.GetEventType())<<24)+(int)(Pixel(fNumberOfHits)); 
+    fPosition[fNumberOfHits] = *(FindWallPosition(Pixel(Size())));//fNumberOfHits)));
+
+    if(B(fNumberOfHits)>fLargestValue) {
+      fLargestValue = B(fNumberOfHits);
+      fLargestHit=fNumberOfHits;
+    }
+    fNumberOfHits++;
+  }
+
 }
 
-TPhosWall::~TPhosWall() {  }
-
+/*
 void TPhosWall::AddPWHit(PWFragment &frag) {
    Clear();
    fTimeStamp  = frag.GetTimeStamp();
@@ -71,7 +145,7 @@ void TPhosWall::AddPWHit(PWFragment &frag) {
    }
    //printf(" Added %i PhosWall hits.\n",x);
 }
-
+*/
 /*
 const Int_t TPhosWall::GetLargestNumber() {
   Int_t temp_largestvalue=0;
@@ -88,25 +162,28 @@ const Int_t TPhosWall::GetLargestNumber() {
 
 
 void TPhosWall::FindWeightedPosition() {
-  if(fACharge.size()<=fLargestHit)
+
+
+  return;
+/*
+  if(fNumberOfHits<=fLargestHit)
      return;
   float ChargeSum=0.0;
   float MaxPixelDistance = 20.0;
-  for(int i=0;i<fBCharge.size();i++) {
-    if((fPosition.at(fLargestHit)-fPosition.at(i)).Mag()<MaxPixelDistance) 
+  for(int i=0;i<fNumberOfHits;i++) {
+    if((*Position(fLargestHit)-*Position(i)).Mag()<MaxPixelDistance) 
       ChargeSum += BCal(i);
   }
-  TVector3 result =  fPosition.at(fLargestHit);
+  TVector3 result =  *Position(fLargestHit);
   result *= ((BCal(fLargestHit))/ChargeSum);
   double x =0.0;
   double y =0.0;
   double z =0.0;
  
-  fMultiplicity = 1;
 
   //printf(DRED "START:" RESET_COLOR "\n");
 
-  for(int i=0;i<fPosition.size();i++) {
+  for(int i=0;i<fNumberOfHits;i++) {
     //printf("Mag: %.02f\tBCal = %.02f\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),BCal(i));
     if(i==fLargestHit) {
        //printf(DGREEN);
@@ -115,12 +192,12 @@ void TPhosWall::FindWeightedPosition() {
        continue;
     }
     //printf("[%02i][%03i]  ",i,fPixel.at(i)); fPosition.at(i).Print();
-    if( ((fPosition.at(fLargestHit)-fPosition.at(i)).Mag()<MaxPixelDistance) &&
-        ((fPixel.at(fLargestHit)/64) == (fPixel.at(i)/64)) ) {
-      TVector3 temp = ((BCal(i))/ChargeSum)*(fPosition.at(i));
+    if( ((*Position(fLargestHit)-*Position(i)).Mag()<MaxPixelDistance) &&
+        ((Pixel(fLargestHit)/64) == (Pixel(i)/64)) ) {
+      TVector3 temp = ((BCal(i))/ChargeSum)*(*Position(i));
       result += temp;
     } else {
-      fMultiplicity++;
+    
     }
   }
   SetWeightedPosition(result);
@@ -128,46 +205,48 @@ void TPhosWall::FindWeightedPosition() {
   //printf("\t[%02i]",fMultiplicity);fWeightedPosition.Print();
   //printf(RESET_COLOR);
   //printf("----------------------------------\n");
-
+*/
 }
 
 void TPhosWall::Print(Option_t *opt) {
   
-  for(int i=0;i<fPosition.size();i++) {
+  for(int i=0;i<fNumberOfHits;i++) {
     if(i==fLargestHit) {
        printf(DGREEN);
-       printf("[%02i][%03i]  \t",i,fPixel.at(i)); //fPosition.at(i).Print();
-       printf("Mag: %.02f\tAChg = %i\t|\tBChg = %i\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),
-       fACharge.at(i),fBCharge.at(i));
+       printf("[%02i][%03i]  \t",i,Pixel(i)); //fPosition.at(i).Print();
+       printf("Mag: %.02f\tAChg = %i\t|\tBChg = %i\n",(*Position(fLargestHit)-*Position(i)).Mag(),
+       A(i),B(i));
        printf(RESET_COLOR);
        continue;
     }
-    printf("[%02i][%03i]  \t",i,fPixel.at(i)); //fPosition.at(i).Print();
-    printf("Mag: %.02f\tAChg = %i\t|\tBChg = %i\n",(fPosition.at(fLargestHit)-fPosition.at(i)).Mag(),
-    fACharge.at(i),fBCharge.at(i));
+    printf("[%02i][%03i]  \t",i,Pixel(i)); //fPosition.at(i).Print();
+    printf("Mag: %.02f\tAChg = %i\t|\tBChg = %i\n",(*Position(fLargestHit)-*Position(i)).Mag(),
+    A(i),B(i));
   }
   printf(DYELLOW);
-  printf("\t[%02i]",fMultiplicity);fWeightedPosition.Print();
+  fWeightedPosition.Print();
   printf(RESET_COLOR);
   printf("----------------------------------\n");
 }
 
 void TPhosWall::Clear(Option_t *opt) {
 
+   //printf("Clear called.\n");
+
    fTimeStamp  = 0;
    fLargestHit = 0;
    fWeightedPosition.SetXYZ(0,0,1);
 
-   fMultiplicity = 0;
-
-   fPosition.clear();
-   fAddress.clear();
-   fACharge.clear();
-   fBCharge.clear();
-   fCCharge.clear();
-   fPixel.clear();
-   fTime.clear();
-
+   fNumberOfHits = 0;
+/*
+   if(fACharge)  delete fPosition;  fACharge = 0;
+   if(fBCharge)  delete fPosition;  fBCharge = 0;
+   if(fCCharge)  delete fPosition;  fCCharge = 0;
+   if(fPixel)    delete fPosition;  fPixel = 0;  
+   if(fTime)     delete fPosition;  fTime = 0;   
+   if(fAddress)  delete fPosition;  fAddress = 0;
+   if(fPosition) delete fPosition;  fPosition = 0;
+*/
 }
 
 
@@ -245,21 +324,21 @@ void TPhosWall::Draw(Option_t *opt) {
      hitpat[x].GetYaxis()->SetNdivisions(8);
      hitpat[x].SetStats(false);
   }
-  for(int x=0;x<fPixel.size();x++) {
-    int hist = fPixel.at(x)/64;
-    int row  = ((fPixel.at(x)-(hist*64))%8);
+  for(int x=0;x<fNumberOfHits;x++) {
+    int hist = Pixel(x)/64;
+    int row  = ((Pixel(x)-(hist*64))%8);
     //if(strcmp(opt,"order")==0) {
     //  printf("reordering happening.\n");
     //  if(col==7) col=5;
     //  else if(col==6) col=7;
     //  else if(col==5) col=6;
     //}
-    int col  = (fPixel.at(x)-(hist*64))/8;
+    int col  = (Pixel(x)-(hist*64))/8;
     //if(strcmp(opt,"order")) {
     //   row = abs(row-7);
     //}
-    hitpat[hist].Fill(row,col,fACharge.at(x));
-    printf("\t\tPixel[%03i | %02i]  r[%02i] c[%02i]   %i\n",fPixel.at(x),fPixel.at(x)-hist*64,row,col,fACharge.at(x));
+    hitpat[hist].Fill(row,col,A(x));
+    printf("\t\tPixel[%03i | %02i]  r[%02i] c[%02i]   %i\n",Pixel(x),Pixel(x)-hist*64,row,col,A(x));
   }
   TCanvas *c;
   if(gPad) {
@@ -294,11 +373,11 @@ void TPhosWall::Draw(Option_t *opt) {
 void TPhosWall::DrawXY(Option_t *opt) {
   TH2I hitpattern("hitpattern","PWFragmet XY Hit Pattern",
                    116,-58,58,116,-58,58);
-  for(int i=0;i<fPixel.size();i++) {
-     TVector3 vec = GetWallPosition(fPixel.at(i));
+  for(int i=0;i<fNumberOfHits;i++) {
+     TVector3 vec = GetWallPosition(Pixel(i));
      hitpattern.Fill(vec.X(),
                      vec.Y(),
-                     fACharge.at(i));
+                     A(i));
   }
   //TCanvas *c;
   if(gPad) {
@@ -618,28 +697,28 @@ void TPhosWall::SetCalMaps() {
 
 
 Float_t TPhosWall::GetACal() {
-   if(fLargestHit>=fTime.size()) 
+   if(fLargestHit>=fNumberOfHits) 
       return 0.0; 
    if(!fCalMapsSet)
       return 0.0;
-   float tmp = (Float_t)fACharge.at(fLargestHit) + gRandom->Uniform(); 
+   float tmp = (Float_t)A(fLargestHit) + gRandom->Uniform(); 
    tmp = tmp* std::get<1>(fAMap[GetPixel()]) + std::get<0>(fAMap[GetPixel()]);
    return tmp;
 }
 
 Float_t TPhosWall::ACal(const int &i) {
-   if(fLargestHit>=fTime.size()) 
+   if(fLargestHit>=fNumberOfHits) 
       return 0.0; 
    if(!fCalMapsSet)
       return 0.0;
-   float tmp = (Float_t)fACharge.at(i) + gRandom->Uniform(); 
+   float tmp = (Float_t)A(i) + gRandom->Uniform(); 
    tmp = tmp* std::get<1>(fAMap[Pixel(i)]) + std::get<0>(fAMap[Pixel(i)]);
    return tmp;
 }
 
 
 Float_t TPhosWall::GetBCal() {
-   if(fLargestHit>=fTime.size()) { 
+   if(fLargestHit>=fNumberOfHits) { 
       //printf("fLargetHit = %i fTime.size() = %i\n",fLargestHit,fTime.size());
       return 0.0; 
    }
@@ -647,14 +726,14 @@ Float_t TPhosWall::GetBCal() {
       //printf("cal maps not yet set!!\n");
       return 0.0;
    }
-   float tmp = (Float_t)fBCharge.at(fLargestHit) + gRandom->Uniform(); 
+   float tmp = (Float_t)B(fLargestHit) + gRandom->Uniform(); 
    tmp = tmp* std::get<1>(fBMap[GetPixel()]) + std::get<0>(fBMap[GetPixel()]);
    return tmp;
 }
 
 
 Int_t TPhosWall::BDiffCal(const int &i) {
-   if(i>=fTime.size()) { 
+   if(i>=fNumberOfHits) { 
       //printf("fLargetHit = %i fTime.size() = %i\n",fLargestHit,fTime.size());
       return 0; 
    }
@@ -675,31 +754,31 @@ Int_t TPhosWall::BDiffCal(const int &i) {
 
 
 Float_t TPhosWall::BCal(const int &i) {
-   if(fLargestHit>=fTime.size()) 
+   if(fLargestHit>=fNumberOfHits) 
       return 0.0; 
    if(!fCalMapsSet)
       return 0.0;
-   float tmp = (Float_t)fBCharge.at(i) + gRandom->Uniform(); 
+   float tmp = (Float_t)B(i) + gRandom->Uniform(); 
    tmp = tmp* std::get<1>(fBMap[Pixel(i)]) + std::get<0>(fBMap[Pixel(i)]);
    return tmp;
 }
 
 Float_t TPhosWall::GetCCal() {
-   if(fLargestHit>=fTime.size()) 
+   if(fLargestHit>=fNumberOfHits) 
       return 0.0; 
    if(!fCalMapsSet)
       return 0.0;
-   float tmp = (Float_t)fCCharge.at(fLargestHit) + gRandom->Uniform(); 
+   float tmp = (Float_t)C(fLargestHit) + gRandom->Uniform(); 
    tmp = tmp* std::get<1>(fCMap[GetPixel()]) + std::get<0>(fCMap[GetPixel()]);
    return tmp;
 }
 
 Float_t TPhosWall::CCal(const int &i) {
-   if(fLargestHit>=fTime.size()) 
+   if(fLargestHit>=fNumberOfHits) 
       return 0.0; 
    if(!fCalMapsSet)
       return 0.0;
-   float tmp = (Float_t)fCCharge.at(i) + gRandom->Uniform(); 
+   float tmp = (Float_t)C(i) + gRandom->Uniform(); 
    tmp = tmp* std::get<1>(fCMap[Pixel(i)]) + std::get<0>(fCMap[Pixel(i)]);
    return tmp;
 }

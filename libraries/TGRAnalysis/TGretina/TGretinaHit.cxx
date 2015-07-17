@@ -36,6 +36,7 @@ TGretinaHit& TGretinaHit::operator+=(const TGretinaHit& rhs) {
 }
 
 inline TGretinaHit operator+(TGretinaHit lhs,const TGretinaHit& rhs) {
+
   lhs += rhs;
   return lhs;
 }
@@ -141,6 +142,10 @@ void TGretinaHit::Copy(const TGEBEvent::TGEBBankType1 &rhs) {
        fFirstSegmentValue = fSegmentEnergy[x];
     }     
   }
+  fCorePosition = TGretina::FindPosition(fCrystalId,rhs.intpts[fFirstInteraction].x
+                                                   ,rhs.intpts[fFirstInteraction].y
+                                                   ,rhs.intpts[fFirstInteraction].z);
+  //fCorePosition.Print();
 }
 
 void TGretinaHit::Copy(const TGretinaHit &rhs) {

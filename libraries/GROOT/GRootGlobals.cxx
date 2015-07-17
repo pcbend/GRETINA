@@ -72,7 +72,7 @@ TH1D *ProjectionX(TH2* mat,double lowvalue,double highvalue) {
      return 0;
   std::string hname = mat->GetName();
   int lowbin, highbin;
-  if((lowvalue<0.1)&&highvalue<0) {
+  if((lowvalue<0.1)&&(highvalue<0)) {
      hname.append("X__total");
      lowbin =0; highbin = -1;
   } else if((lowvalue>0.1)&&(highvalue<-1)) {
@@ -284,6 +284,27 @@ bool RemovePeaks(TH1 **hists, unsigned int Nhists)
 	return true;
    */
 }
+/*
+void ClickNFit() {
+   int event = gPad->GetEvent();
+   if(event != 11) 
+      return;
+   TObject *object = gPad->GetListOfPrimitives()->At(1);
+   if(!object)
+      return;
+   if(object->InheritsFrom("TH1")) {
+     int px = gPad->GetEventX();
+     int py = gPad->GetEventY();
+          
+   }
+}
+
+TGraph *GUICalibrate152Eu(TH1 *hist) {
+  gPad->GetCanvas()->AddExec("ex","FitClicked()") ; 
+}
+*/
+
+
 
 void Prompt()   {  }  //Getlinem(EGetLineMode::kInit,((TRint*)gApplication)->GetPrompt()); }
 

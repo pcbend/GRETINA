@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <string>
 #include <stdexcept>
+#include <malloc.h>
 
 #include <TGEBMultiFile.h>
 #include <TGEBFile.h>
@@ -30,6 +31,13 @@ int main(int argc, char **argv) {
            "\ttime ordered. \n");
     return 1;
   }
+
+  int error = mallopt(M_CHECK_ACTION,0x7);
+  if(!error) {
+     printf("mallopt error!   %i\n",error);
+     return 1;
+  }
+
   
   char *path = getenv("GEBSYS");
   std::string calfile; calfile.assign(path); calfile.append("/util/mycal.cal");
@@ -40,7 +48,6 @@ int main(int argc, char **argv) {
   Long_t First2 = 0;
 
   std::string outfilename;
-
   for(int x=1;x<argc;x++) {
     if(!strcmp(argv[x],"-o") || !strcmp(argv[x],"--outfile")) {
       if((x+1)>=argc) {
@@ -53,6 +60,7 @@ int main(int argc, char **argv) {
       multi.Add(argv[x]);
     }
   }
+
 
   TGEBEvent *event = new TGEBEvent;
   size_t bytes = multi.Read(event);
@@ -71,11 +79,11 @@ int main(int argc, char **argv) {
 
   TGretina  *gretina  = new TGretina;
   TPhosWall *phoswall = new TPhosWall;
-  TLaBr     *labr     = new TLaBr;
+  //TLaBr     *labr     = new TLaBr;
 
   int phoscounter = 0;
   int gretcounter = 0;
-  int labrcounter = 0;
+  //int labrcounter = 0;
 
   if(outfilename.length()==0) {
      printf("\tno outfile file specified, using default: myoutput.root\n");
@@ -91,14 +99,18 @@ int main(int argc, char **argv) {
   TTree::SetMaxTreeSize((Long_t)1*(Long_t)1024*(Long_t)1024*(Long_t)1024);
   tree->Branch("TGretina","TGretina",&gretina);
   tree->Branch("TPhosWall","TPhosWall",&phoswall);
-  tree->Branch("TLaBr","TLaBr",&labr);
+  //tree->Branch("TLaBr","TLaBr",&labr);
+
+  tree->SetCacheSize(100000000);
+  tree->SetCacheLearnEntries(100);
+
 
   bool run = true;
   int loopcounter=0;
 
   while(run) {
     loopcounter++;
-    //if(loopcounter > 100000)
+    //if(loopcounter > 10000)
     //  break;
     try {
       bytes = multi.Read(event);
@@ -116,7 +128,7 @@ int main(int argc, char **argv) {
     if(abs(event->GetTimeStamp()-LastTime)>500) {  // 5 us build time.
       //printf( DRED "build "  RESET_COLOR "\n");
       phoswall->FindWeightedPosition();
-      //gretina->BuildAddBack();
+      gretina->BuildAddBack();
      
       //phoswall->GetPosition().Print();
 
@@ -124,7 +136,7 @@ int main(int argc, char **argv) {
 
       gretina->Clear();
       phoswall->Clear();
-      labr->Clear();
+      //labr->Clear();
     }
 
     switch(event->GetEventType()) {
@@ -136,16 +148,18 @@ int main(int argc, char **argv) {
       }
       break;
       case 17: {
-        PWFragment frag(*event);
-        phoswall->AddPWHit(frag);
+         
+        //PWFragment frag(*event);
+        //phoswall->AddPWHit(frag);
+        phoswall->Copy(*event);
         phoscounter++;
       }
       break;
       case 18: {
-        LaBrFragment frag(event);
+        //LaBrFragment frag(event);
         //frag.Print();
-        labr->Set(frag);
-        labrcounter++;
+        //labr->Set(frag);
+        //labrcounter++;
       }
       break;
     };  
@@ -165,7 +179,7 @@ int main(int argc, char **argv) {
   tree->Fill();      
   gretina->Clear();
   phoswall->Clear();
-  labr->Clear();
+  //labr->Clear();
   
 
 

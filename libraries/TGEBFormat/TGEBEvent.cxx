@@ -21,10 +21,17 @@ TGEBEvent::TGEBEvent() {
 }
 
 void TGEBEvent::Copy(const TGEBEvent &rhs) {
-
+  Clear();
   fEventHeader = rhs.fEventHeader;
 
   fData = (char*)malloc(fEventHeader.size);
+  if(!fData) {
+    printf("\n\tmalloc failed?\n");
+    printf("\n\n\n\n\n");
+    printf("\tfEventHeader.type      = %i\n",fEventHeader.type);
+    printf("\tfEventHeader.size      = %i\n",fEventHeader.size);
+    printf("\tfEventHeader.timestamp = %lu\n",fEventHeader.timestamp);
+  }
   assert(fData);
   memcpy(fData,rhs.fData,fEventHeader.size);
   fAllocatedByUs = true;

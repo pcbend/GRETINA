@@ -18,6 +18,9 @@ Rint.TabComColor: magenta
 Canvas.ShowEventStatus: true
 #Canvas.ShowToolBar: true
 
+TTreeCache.Size: 100000
+TTreeCache.Prefill: 1
+
 
 Browser.Name: GRootBrowser
 

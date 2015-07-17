@@ -13,15 +13,15 @@ ClassImp(TGEBMultiFile)
 
 TGEBMultiFile::TGEBMultiFile() { }
 
-TGEBMultiFile::~TGEBMultiFile() { }
+TGEBMultiFile::~TGEBMultiFile() { Close(); }
 
 bool TGEBMultiFile::Add(const char *fname) {
-  TGEBFile *file = new TGEBFile(fname);
+  TGEBFile* file = new TGEBFile(fname);
   Add(file);
   return true;
 }
 
-bool TGEBMultiFile::Add(TGEBFile *file) {
+bool TGEBMultiFile::Add(TGEBFile* file) {
   fFiles.push_back(file);
   TGEBEvent *event = new TGEBEvent;
   fEvents.push_back(event);
@@ -63,7 +63,14 @@ bool TGEBMultiFile::GetNextEvent(int i) {
 
 void TGEBMultiFile::InitiMultFiles()  {  }
 
-void TGEBMultiFile::Close()  {  }
+void TGEBMultiFile::Close()  { 
+  for(auto event : fEvents)
+     delete event;
+  fEvents.clear();
+  for(auto file : fFiles)
+     delete file;
+  fFiles.clear();
+}
 
 int TGEBMultiFile::Read(TGEBEvent *gevent)  { 
   if(!gevent)
